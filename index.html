@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gentex OneView v1.0</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;--card:#ffffff;--ink:#1f2937;--muted:#6b7280;--brand:#0f766e;
+      --brand2:#115e59;--danger:#dc2626;--warn:#d97706;--ok:#16a34a;--line:#e5e7eb;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
+    header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .brand h1{margin:0;font-size:24px;letter-spacing:.3px}
+    .brand p{margin:3px 0 0;font-size:13px;opacity:.9}
+    .userbox{font-size:13px;background:rgba(255,255,255,.15);padding:8px 12px;border-radius:12px}
+    .layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 78px)}
+    nav{background:#0b3b39;color:#d1fae5;padding:16px 10px}
+    nav button{width:100%;border:0;background:transparent;color:#d1fae5;text-align:left;padding:12px 14px;margin:3px 0;border-radius:12px;cursor:pointer;font-size:14px}
+    nav button:hover,nav button.active{background:rgba(255,255,255,.14);color:#fff}
+    main{padding:18px;overflow:auto}
+    .grid{display:grid;gap:14px}
+    .cards{grid-template-columns:repeat(4,minmax(160px,1fr))}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 8px 22px rgba(15,23,42,.05)}
+    .kpi .label{font-size:13px;color:var(--muted)}
+    .kpi .value{font-size:25px;font-weight:700;margin-top:6px}
+    .kpi .sub{font-size:12px;color:var(--muted);margin-top:5px}
+    h2{margin:0 0 14px;font-size:22px}
+    h3{margin:0 0 10px;font-size:16px}
+    .section{display:none}
+    .section.active{display:block}
+    .two{grid-template-columns:1.1fr .9fr}
+    .three{grid-template-columns:repeat(3,1fr)}
+    table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:12px;overflow:hidden}
+    th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+    th{background:#f9fafb;color:#374151;font-weight:700}
+    tr:last-child td{border-bottom:0}
+    .tag{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+    .danger{background:#fee2e2;color:#991b1b}
+    .warn{background:#fef3c7;color:#92400e}
+    .ok{background:#dcfce7;color:#166534}
+    .info{background:#dbeafe;color:#1e40af}
+    label{font-size:12px;font-weight:700;color:#374151;display:block;margin:8px 0 4px}
+    input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:14px}
+    textarea{min-height:70px}
+    .formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .btn{border:0;background:var(--brand);color:#fff;padding:11px 14px;border-radius:12px;cursor:pointer;font-weight:700}
+    .btn.secondary{background:#334155}
+    .btn.light{background:#e5e7eb;color:#111827}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .note{font-size:13px;color:var(--muted);line-height:1.45}
+    .mobilebar{display:none}
+    @media(max-width:900px){
+      .layout{grid-template-columns:1fr}
+      nav{display:none}
+      .mobilebar{display:block;padding:10px;background:#0b3b39}
+      .mobilebar select{background:#fff}
+      .cards,.two,.three,.formgrid{grid-template-columns:1fr}
+      main{padding:12px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>Gentex OneView</h1>
+      <p>Stock • Production • Scrap • Planning</p>
+    </div>
+    <div class="userbox">v1.0 Prototype • Store Supervisor / Boss View</div>
+  </header>
+
+  <div class="mobilebar">
+    <select id="mobileNav" onchange="showSection(this.value)">
+      <option value="dashboard">Dashboard</option>
+      <option value="materials">Material Master</option>
+      <option value="stockin">Stock In</option>
+      <option value="stockout">Stock Out</option>
+      <option value="mixing">Mixing Calculator</option>
+      <option value="production">Production Entry</option>
+      <option value="scrap">Scrap Entry</option>
+      <option value="silo">Silo Feed</option>
+      <option value="purchase">Purchase Planning</option>
+      <option value="reports">Reports</option>
+    </select>
+  </div>
+
+  <div class="layout">
+    <nav id="sideNav">
+      <button class="active" onclick="showSection('dashboard')">Dashboard</button>
+      <button onclick="showSection('materials')">Material Master</button>
+      <button onclick="showSection('stockin')">Stock In</button>
+      <button onclick="showSection('stockout')">Stock Out</button>
+      <button onclick="showSection('mixing')">Mixing Calculator</button>
+      <button onclick="showSection('production')">Production Entry</button>
+      <button onclick="showSection('scrap')">Scrap Entry</button>
+      <button onclick="showSection('silo')">Silo Feed</button>
+      <button onclick="showSection('purchase')">Purchase Planning</button>
+      <button onclick="showSection('reports')">Reports</button>
+    </nav>
+
+    <main>
+      <section id="dashboard" class="section active">
+        <h2>Boss Dashboard</h2>
+        <div class="grid cards">
+          <div class="card kpi"><div class="label">Total Materials</div><div class="value" id="kMaterials">0</div><div class="sub">Raw material master</div></div>
+          <div class="card kpi"><div class="label">Order Now</div><div class="value" id="kOrder">0</div><div class="sub">Below 4-month cover</div></div>
+          <div class="card kpi"><div class="label">Watch</div><div class="value" id="kWatch">0</div><div class="sub">4 to 5 months cover</div></div>
+          <div class="card kpi"><div class="label">On The Way</div><div class="value" id="kOnWay">0 kg</div><div class="sub">Pending arrivals</div></div>
+        </div>
+        <div class="grid two" style="margin-top:14px">
+          <div class="card">
+            <h3>Materials To Order Now</h3>
+            <table id="criticalTable"></table>
+          </div>
+          <div class="card">
+            <h3>Production Today</h3>
+            <table id="prodTodayTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <section id="materials" class="section">
+        <h2>Material Master</h2>
+        <div class="card">
+          <div class="formgrid">
+            <div><label>Material Code</label><input id="mCode" placeholder="RM024"></div>
+            <div><label>Material Name</label><input id="mName" placeholder="HDPE Material"></div>
+            <div><label>Category</label><select id="mCat"><option>HDPE</option><option>PVC</option><option>Additive</option><option>Color</option><option>Scrap</option></select></div>
+            <div><label>Pack Weight Kg</label><input id="mPack" type="number" value="25"></div>
+            <div><label>Opening Stock Kg</label><input id="mOpening" type="number" value="0"></div>
+            <div><label>4 Month Avg Use / Month</label><input id="mAvg" type="number" value="0"></div>
+          </div>
+          <div class="actions"><button class="btn" onclick="addMaterial()">Add Material</button><button class="btn light" onclick="resetDemo()">Reset Demo Data</button></div>
+        </div>
+        <div class="card" style="margin-top:14px"><h3>Materials</h3><table id="materialsTable"></table></div>
+      </section>
+
+      <section id="stockin" class="section">
+        <h2>Stock In</h2>
+        <div class="card">
+          <div class="formgrid">
+            <div><label>Date</label><input id="inDate" type="date"></div>
+            <div><label>Material</label><select id="inMaterial"></select></div>
+            <div><label>Bags</label><input id="inBags" type="number" value="0"></div>
+            <div><label>Pack Size Kg</label><input id="inPack" type="number" value="25"></div>
+            <div><label>Qty Kg</label><input id="inQty" type="number" value="0"></div>
+            <div><label>Supplier / Remarks</label><input id="inRemarks"></div>
+          </div>
+          <div class="actions"><button class="btn" onclick="addStock('IN')">Save Stock In</button></div>
+        </div>
+      </section>
+
+      <section id="stockout" class="section">
+        <h2>Stock Out / Store Issue</h2>
+        <div class="card">
+          <div class="formgrid">
+            <div><label>Date</label><input id="outDate" type="date"></div>
+            <div><label>Material</label><select id="outMaterial"></select></div>
+            <div><label>Department / Item</label><select id="outDept"><option>Tank</option><option>HDPE Pipe</option><option>PVC Pipe</option><option>PVC Gutter</option><option>HDPE Fittings</option><option>PVC Fittings</option></select></div>
+            <div><label>Bags</label><input id="outBags" type="number" value="0"></div>
+            <div><label>Pack Size Kg</label><input id="outPack" type="number" value="25"></div>
+            <div><label>Qty Kg</label><input id="outQty" type="number" value="0"></div>
+          </div>
+          <div class="actions"><button class="btn" onclick="addStock('OUT')">Save Stock Out</button></div>
+          <p class="note">Stock reduces only from actual Stock Out entry, not automatically from production or mixing.</p>
+        </div>
+      </section>
+
+      <section id="mixing" class="section">
+        <h2>Mixing Calculator</h2>
+        <div class="grid two">
+          <div class="card">
+            <div class="formgrid">
+              <div><label>Mix Type</label><select id="mixType"><option>PVC Pipe Grey</option><option>PVC Gutter White</option><option>HDPE Tank</option><option>HDPE Pipe</option></select></div>
+              <div><label>Number of Mixes</label><input id="mixCount" type="number" value="1"></div>
+              <div><label>Previous Balance Kg</label><input id="mixPrev" type="number" value="0"></div>
+            </div>
+            <div class="actions"><button class="btn" onclick="calcMix()">Calculate Bags</button></div>
+            <p class="note">This is for planning/material request only. It does not deduct stock.</p>
+          </div>
+          <div class="card">
+            <h3>Material Request Slip</h3>
+            <table id="mixResult"></table>
+          </div>
+        </div>
+      </section>
+
+      <section id="production" class="section">
+        <h2>Production Entry</h2>
+        <div class="card">
+          <div class="formgrid">
+            <div><label>Production Date</label><input id="pDate" type="date"></div>
+            <div><label>Shift</label><select id="pShift"><option>Day (08:00-17:00)</option><option>Night (17:00-08:00)</option></select></div>
+            <div><label>Department</label><select id="pDept"><option>HDPE Tanks</option><option>HDPE Pipes</option><option>PVC Pipes</option><option>PVC Gutters</option><option>HDPE Fittings</option><option>PVC Fittings</option></select></div>
+            <div><label>Machine</label><input id="pMachine" placeholder="1000L / 338-A / PE-1"></div>
+            <div><label>Operator</label><input id="pOperator"></div>
+            <div><label>Worked Hours</label><input id="pHours" type="number" value="8"></div>
+            <div><label>Previous Balance Kg</label><input id="pPrev" type="number" value="0"></div>
+            <div><label>New Mix Kg</label><input id="pNew" type="number" value="0"></div>
+            <div><label>Used Kg</label><input id="pUsed" type="number" value="0"></div>
+            <div><label>Present Balance Kg</label><input id="pPresent" type="number" value="0"></div>
+            <div><label>Product / Size / Class</label><input id="pProduct"></div>
+            <div><label>Quantity Produced</label><input id="pQty" type="number" value="0"></div>
+            <div><label>Good Tank / Good Output</label><input id="pGood" type="number" value="0"></div>
+            <div><label>Off Cut Kg</label><input id="pOffcut" type="number" value="0"></div>
+            <div><label>Rejected Kg</label><input id="pRejected" type="number" value="0"></div>
+            <div><label>Fallen Kg</label><input id="pFallen" type="number" value="0"></div>
+            <div><label>Wastage Kg</label><input id="pWastage" type="number" value="0"></div>
+            <div><label>Checked By</label><input id="pChecked"></div>
+          </div>
+          <div class="actions"><button class="btn" onclick="addProduction()">Save Production</button></div>
+        </div>
+      </section>
+
+      <section id="scrap" class="section">
+        <h2>Scrap Entry</h2>
+        <div class="card">
+          <div class="formgrid">
+            <div><label>Date</label><input id="sDate" type="date"></div>
+            <div><label>Department</label><select id="sDept"><option>Tank</option><option>HDPE Pipe</option><option>PVC Pipe</option><option>PVC Gutter</option><option>Fittings</option></select></div>
+            <div><label>Machine</label><input id="sMachine"></div>
+            <div><label>Scrap Type</label><select id="sType"><option>Off Cut</option><option>Rejected</option><option>Fallen</option><option>Reused</option></select></div>
+            <div><label>Qty Kg</label><input id="sQty" type="number" value="0"></div>
+            <div><label>Remarks</label><input id="sRemarks"></div>
+          </div>
+          <div class="actions"><button class="btn" onclick="addScrap()">Save Scrap</button></div>
+        </div>
+      </section>
+
+      <section id="silo" class="section">
+        <h2>Silo Feed Planning</h2>
+        <div class="card">
+          <table>
+            <thead><tr><th>Silo</th><th>Material</th><th>Required Feed Kg</th><th>Actual Feed Kg</th><th>Shift</th></tr></thead>
+            <tbody>
+              <tr><td>Silo 1</td><td>RM024</td><td><input id="silo1Req" type="number" value="0"></td><td><input id="silo1Act" type="number" value="0"></td><td>Day/Night</td></tr>
+              <tr><td>Silo 2</td><td>RM019</td><td><input id="silo2Req" type="number" value="0"></td><td><input id="silo2Act" type="number" value="0"></td><td>Day/Night</td></tr>
+              <tr><td>Silo 3</td><td>RM023 Widespec</td><td><input id="silo3Req" type="number" value="0"></td><td><input id="silo3Act" type="number" value="0"></td><td>Day/Night</td></tr>
+              <tr><td>Silo 4</td><td>RM020 3310</td><td><input id="silo4Req" type="number" value="0"></td><td><input id="silo4Act" type="number" value="0"></td><td>Day/Night</td></tr>
+            </tbody>
+          </table>
+          <div class="actions"><button class="btn" onclick="alert('Silo feed saved in prototype demo.')">Save Silo Feed</button></div>
+          <p class="note">No physical silo balance tracking. Focus is required feed vs actual feed.</p>
+        </div>
+      </section>
+
+      <section id="purchase" class="section">
+        <h2>Purchase Planning</h2>
+        <div class="card">
+          <h3>Coverage and Action</h3>
+          <table id="purchaseTable"></table>
+        </div>
+      </section>
+
+      <section id="reports" class="section">
+        <h2>Reports</h2>
+        <div class="grid three">
+          <div class="card"><h3>Monthly Raw Material Summary</h3><p class="note">Opening + In - Out = Closing. Same structure as current boss report.</p><button class="btn secondary" onclick="downloadJSON()">Export Demo Data</button></div>
+          <div class="card"><h3>Production Summary</h3><p class="note">Department-wise, machine-wise, shift-wise production.</p></div>
+          <div class="card"><h3>Scrap Summary</h3><p class="note">Off cut, rejected, fallen, reused scrap by department.</p></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+<script>
+const today = new Date().toISOString().slice(0,10);
+const qs = id => document.getElementById(id);
+
+let db = JSON.parse(localStorage.getItem("gentexOneViewDB") || "null");
+
+const seed = {
+  materials:[
+    {code:"RM001",name:"PVC RESIN K67",cat:"PVC",pack:25,opening:1218875,avg:300000,onway:0},
+    {code:"RM002",name:"FILLER CACO3 (Coated)",cat:"PVC",pack:25,opening:150300,avg:60000,onway:0},
+    {code:"RM019",name:"HDPE Material RM019",cat:"HDPE",pack:25,opening:50000,avg:18000,onway:0},
+    {code:"RM020",name:"3310",cat:"HDPE",pack:25,opening:30000,avg:9000,onway:0},
+    {code:"RM023",name:"Widespec",cat:"HDPE",pack:25,opening:42000,avg:12000,onway:0},
+    {code:"RM024",name:"HDPE Material RM024",cat:"HDPE",pack:25,opening:35000,avg:11000,onway:0},
+    {code:"RM999",name:"Polycom-F",cat:"Additive",pack:20,opening:6000,avg:1000,onway:0}
+  ],
+  tx:[],
+  production:[],
+  scrap:[]
+};
+if(!db){ db = seed; save(); }
+
+function save(){ localStorage.setItem("gentexOneViewDB", JSON.stringify(db)); }
+function resetDemo(){ if(confirm("Reset prototype data?")){db=JSON.parse(JSON.stringify(seed)); save(); renderAll();}}
+
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  qs(id).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  [...document.querySelectorAll('nav button')].find(b=>b.textContent.toLowerCase().includes(id.replace('stockin','stock in').replace('stockout','stock out').replace('materials','material')))?.classList.add('active');
+  qs('mobileNav').value=id;
+  renderAll();
+}
+
+function stockOf(code){
+  const m=db.materials.find(x=>x.code===code);
+  const ins=db.tx.filter(t=>t.code===code && t.type==="IN").reduce((a,b)=>a+b.qty,0);
+  const outs=db.tx.filter(t=>t.code===code && t.type==="OUT").reduce((a,b)=>a+b.qty,0);
+  return (m?.opening||0)+ins-outs;
+}
+function coverMonths(m){ return m.avg>0 ? (stockOf(m.code)+(m.onway||0))/m.avg : 999; }
+function status(m){
+  const c=coverMonths(m);
+  if(c<4) return ["ORDER NOW","danger"];
+  if(c<=5) return ["WATCH","warn"];
+  return ["OK","ok"];
+}
+function table(el, headers, rows){
+  qs(el).innerHTML = `<thead><tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody>`;
+}
+function materialOptions(){
+  const opts=db.materials.map(m=>`<option value="${m.code}">${m.code} - ${m.name}</option>`).join("");
+  ["inMaterial","outMaterial"].forEach(id=>{ if(qs(id)) qs(id).innerHTML=opts; });
+}
+function addMaterial(){
+  db.materials.push({code:qs("mCode").value.trim(),name:qs("mName").value.trim(),cat:qs("mCat").value,pack:+qs("mPack").value,opening:+qs("mOpening").value,avg:+qs("mAvg").value,onway:0});
+  save(); renderAll();
+}
+function addStock(type){
+  const prefix=type==="IN"?"in":"out";
+  const code=qs(prefix+"Material").value;
+  const m=db.materials.find(x=>x.code===code);
+  const bags=+qs(prefix+"Bags").value;
+  const pack=+qs(prefix+"Pack").value || m.pack;
+  const qty=+qs(prefix+"Qty").value || bags*pack;
+  db.tx.push({type,code,date:qs(prefix+"Date").value||today,bags,pack,qty,dept:type==="OUT"?qs("outDept").value:"",remarks:type==="IN"?qs("inRemarks").value:""});
+  save(); renderAll(); alert("Saved.");
+}
+function addProduction(){
+  const variance=(+qs("pPrev").value + +qs("pNew").value - +qs("pUsed").value - +qs("pPresent").value);
+  db.production.push({date:qs("pDate").value||today,shift:qs("pShift").value,dept:qs("pDept").value,machine:qs("pMachine").value,operator:qs("pOperator").value,hours:+qs("pHours").value,product:qs("pProduct").value,qty:+qs("pQty").value,good:+qs("pGood").value,offcut:+qs("pOffcut").value,rejected:+qs("pRejected").value,fallen:+qs("pFallen").value,wastage:+qs("pWastage").value,variance});
+  save(); renderAll(); alert(Math.abs(variance)>0.01 ? "Saved. Material variance detected: "+variance.toFixed(2)+" kg" : "Saved. Material balance OK.");
+}
+function addScrap(){
+  db.scrap.push({date:qs("sDate").value||today,dept:qs("sDept").value,machine:qs("sMachine").value,type:qs("sType").value,qty:+qs("sQty").value,remarks:qs("sRemarks").value});
+  save(); renderAll(); alert("Scrap saved.");
+}
+function calcMix(){
+  const n=+qs("mixCount").value, prev=+qs("mixPrev").value;
+  let recipe=[
+    ["RM001","PVC Resin",100,25],
+    ["RM002","Filler",50,25],
+    ["RM999","Polycom-F",20,20]
+  ];
+  if(qs("mixType").value.includes("HDPE")) recipe=[["RM024","HDPE RM024",80,25],["RM019","HDPE RM019",40,25],["RM023","Widespec",25,25],["RM020","3310",20,25]];
+  const rows=recipe.map((r,i)=>{
+    const total=r[2]*n, deduction=i===0?prev:0, net=Math.max(total-deduction,0), bags=net/r[3];
+    return [r[0],r[1],total.toFixed(2),deduction.toFixed(2),net.toFixed(2),r[3],bags.toFixed(2)];
+  });
+  table("mixResult",["Code","Material","Required Kg","Prev Bal","Net Kg","Bag Kg","Bags"],rows);
+}
+function downloadJSON(){
+  const data="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(db,null,2));
+  const a=document.createElement("a"); a.href=data; a.download="gentex_oneview_demo_data.json"; a.click();
+}
+function renderAll(){
+  materialOptions();
+  ["inDate","outDate","pDate","sDate"].forEach(id=>{ if(qs(id) && !qs(id).value) qs(id).value=today; });
+  if(qs("inMaterial").value){ const m=db.materials.find(x=>x.code===qs("inMaterial").value); if(m) qs("inPack").value=m.pack; }
+  if(qs("outMaterial").value){ const m=db.materials.find(x=>x.code===qs("outMaterial").value); if(m) qs("outPack").value=m.pack; }
+
+  const matRows=db.materials.map(m=>[m.code,m.name,m.cat,m.pack,stockOf(m.code).toLocaleString(),m.avg.toLocaleString(),coverMonths(m).toFixed(2),`<span class="tag ${status(m)[1]}">${status(m)[0]}</span>`]);
+  table("materialsTable",["Code","Material","Category","Pack Kg","Current Stock","Avg Use/M","Cover Months","Status"],matRows);
+  table("purchaseTable",["Code","Material","Current Stock","On Way","Avg Use/M","Cover Months","Action"],db.materials.map(m=>[m.code,m.name,stockOf(m.code).toLocaleString(),(m.onway||0).toLocaleString(),m.avg.toLocaleString(),coverMonths(m).toFixed(2),`<span class="tag ${status(m)[1]}">${status(m)[0]}</span>`]));
+  const critical=db.materials.filter(m=>coverMonths(m)<4).map(m=>[m.code,m.name,stockOf(m.code).toLocaleString(),coverMonths(m).toFixed(2),`<span class="tag danger">ORDER NOW</span>`]);
+  table("criticalTable",["Code","Material","Stock","Cover","Action"],critical.length?critical:[["-","No urgent material in demo","-","-","-"]]);
+  const prodToday=db.production.filter(p=>p.date===today).map(p=>[p.dept,p.machine,p.product,p.qty,p.wastage,Math.abs(p.variance)>0.01?`<span class="tag warn">${p.variance.toFixed(2)} kg variance</span>`:`<span class="tag ok">OK</span>`]);
+  table("prodTodayTable",["Dept","Machine","Product","Qty","Wastage","Balance"],prodToday.length?prodToday:[["-","No production entered today","-","-","-","-"]]);
+
+  qs("kMaterials").textContent=db.materials.length;
+  qs("kOrder").textContent=db.materials.filter(m=>coverMonths(m)<4).length;
+  qs("kWatch").textContent=db.materials.filter(m=>coverMonths(m)>=4 && coverMonths(m)<=5).length;
+  qs("kOnWay").textContent=db.materials.reduce((a,b)=>a+(b.onway||0),0).toLocaleString()+" kg";
+}
+document.addEventListener("change",e=>{
+  if(e.target.id==="inMaterial"){const m=db.materials.find(x=>x.code===e.target.value); if(m) qs("inPack").value=m.pack;}
+  if(e.target.id==="outMaterial"){const m=db.materials.find(x=>x.code===e.target.value); if(m) qs("outPack").value=m.pack;}
+  if(["inBags","inPack"].includes(e.target.id)) qs("inQty").value=(+qs("inBags").value*+qs("inPack").value).toFixed(2);
+  if(["outBags","outPack"].includes(e.target.id)) qs("outQty").value=(+qs("outBags").value*+qs("outPack").value).toFixed(2);
+});
+renderAll();
+calcMix();
+</script>
+</body>
+</html>
