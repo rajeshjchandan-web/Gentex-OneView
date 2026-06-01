@@ -244,6 +244,54 @@ tr:last-child td{border-bottom:0}
         </div>
       </section>
 
+
+      <section id="mixing" class="section">
+        <h2>Mixing Master & Calculator</h2>
+        <div class="grid two">
+          <div class="card editable">
+            <h3>Create / Update Mix Recipe</h3>
+            <div class="formgrid">
+              <div><label>Mix Name</label><input id="recipeName" placeholder="HDPE Tank 25kg Bag Mix"></div>
+              <div><label>Raw Material Code</label><select id="recipeMat"></select></div>
+              <div><label>Kg Per Mix</label><input id="recipeKg" type="number" value="0" step="0.001"></div>
+            </div>
+            <div class="actions">
+              <button class="btn" onclick="addRecipeLine()">Add Material To Mix</button>
+              <button class="btn-light" onclick="clearRecipeDraft()">Clear Draft</button>
+            </div>
+            <p class="note">Create any mix manually using raw material code. The app uses Material Master pack weight to calculate bags.</p>
+          </div>
+          <div class="card">
+            <h3>Current Mix Draft</h3>
+            <table id="recipeDraftTable"></table>
+            <div class="actions"><button class="btn" onclick="saveRecipe()">Save Mix Recipe</button></div>
+          </div>
+        </div>
+        <div class="grid two" style="margin-top:14px">
+          <div class="card editable">
+            <h3>Calculate Bags From Saved Mix</h3>
+            <div class="formgrid">
+              <div><label>Select Saved Mix</label><select id="mixType"></select></div>
+              <div><label>Number of Mixes / Bags</label><input id="mixCount" type="number" value="1" step="0.001"></div>
+              <div><label>Previous Balance Kg</label><input id="mixPrev" type="number" value="0" step="0.001"></div>
+            </div>
+            <div class="actions">
+              <button class="btn" onclick="calcMix()">Calculate Material Request</button>
+              <button class="btn-dark" onclick="printSlip()">Print Slip</button>
+            </div>
+          </div>
+          <div class="card" id="printArea">
+            <h3>Material Request Slip</h3>
+            <div class="small" id="slipMeta"></div>
+            <table id="mixResult"></table>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <h3>Saved Mix Recipes</h3>
+          <table id="savedRecipesTable"></table>
+        </div>
+      </section>
+
       <section id="production" class="section">
         <h2>Production Entry</h2>
         <div class="card editable">
@@ -313,6 +361,16 @@ tr:last-child td{border-bottom:0}
         </div>
       </section>
 
+
+      <section id="activity" class="section">
+        <h2>Activity Log</h2>
+        <div class="card">
+          <h3>All User Activity</h3>
+          <table id="activityTable"></table>
+          <p class="note">Every save entry records user, role, date and exact time automatically.</p>
+        </div>
+      </section>
+
       <section id="reports" class="section">
         <h2>Reports & Export</h2>
         <div class="grid three">
@@ -332,6 +390,7 @@ const items = ["FASCIA", "FITTINGS", "GUTTERS", "HDPE FITTING", "HDPE PIPE", "PI
 const siloMap = {"1":"RM024","2":"RM019","3":"RM023","4":"RM020"};
 
 const users = [
+  {name:"Admin",role:"ADMIN",pass:"1234"},
   {name:"Store Supervisor",role:"STORE",pass:"1234"},
   {name:"Boss 1",role:"BOSS",pass:"1234"},
   {name:"Boss 2",role:"BOSS",pass:"1234"},
@@ -342,7 +401,8 @@ const users = [
 ];
 
 const menuByRole = {
-  STORE:["dashboard","materials","stockin","stockout","onway","mixing","purchase","reports"],
+  ADMIN:["dashboard","materials","stockin","stockout","onway","mixing","production","scrap","silo","purchase","activity","reports"],
+  STORE:["dashboard","materials","stockin","stockout","onway","mixing","purchase","activity","reports"],
   BOSS:["dashboard","purchase","reports"],
   TANK:["production","scrap","silo"],
   PIPE_SUP:["production","scrap"],
@@ -352,7 +412,7 @@ const menuByRole = {
 const menuNames = {
   dashboard:"Dashboard",materials:"Material Master",stockin:"Material In",stockout:"Material Out",
   onway:"On-The-Way",mixing:"Mixing Calculator",production:"Production",scrap:"Scrap",
-  silo:"Silo Feed",purchase:"Purchase Planning",reports:"Reports"
+  silo:"Silo Feed",purchase:"Purchase Planning",activity:"Activity Log",reports:"Reports"
 };
 
 const seed = {
@@ -362,7 +422,8 @@ const seed = {
   onway:[],
   production:[],
   scrap:[],
-  silo:[]
+  silo:[],
+  logs:[]
 };
 
 let db = JSON.parse(localStorage.getItem("gentexOneViewV11") || "null") || seed;
@@ -388,6 +449,56 @@ const qs = id => document.getElementById(id);
 function save(){ localStorage.setItem("gentexOneViewV11",JSON.stringify(db)); }
 function resetAll(){ if(confirm("Reset all demo data?")){ db = JSON.parse(JSON.stringify(seed)); save(); location.reload(); } }
 
+
+function migrateV12(){
+  if(!db.logs) db.logs = [];
+  if(!db.recipes) db.recipes = [];
+  if(!db.recipeDraft) db.recipeDraft = [];
+  const tankRecipeName = "HDPE Tank 25kg Bag Mix";
+  if(!db.recipes.find(r=>r.name===tankRecipeName)){
+    db.recipes.push({
+      name:tankRecipeName,
+      lines:[
+        {code:"RM026",kg:0.2},
+        {code:"RM027",kg:0.6},
+        {code:"RM024",kg:135},
+        {code:"RM020",kg:40},
+        {code:"RM019",kg:35},
+        {code:"RM033",kg:89.87}
+      ]
+    });
+  }
+  const hdpeSimple = "HDPE Tank";
+  if(!db.recipes.find(r=>r.name===hdpeSimple)){
+    db.recipes.push({
+      name:hdpeSimple,
+      lines:[{code:"RM024",kg:80},{code:"RM019",kg:40},{code:"RM023",kg:25},{code:"RM020",kg:20}]
+    });
+  }
+  const pvcSimple = "PVC Pipe Grey";
+  if(!db.recipes.find(r=>r.name===pvcSimple)){
+    db.recipes.push({
+      name:pvcSimple,
+      lines:[{code:"RM001",kg:100},{code:"RM002",kg:50},{code:"RM003",kg:5}]
+    });
+  }
+}
+function nowStamp(){
+  const d = new Date();
+  return d.toLocaleString();
+}
+function logAction(action, details){
+  if(!db.logs) db.logs = [];
+  db.logs.unshift({
+    time: nowStamp(),
+    user: currentUser ? currentUser.name : "System",
+    role: currentUser ? currentUser.role : "SYSTEM",
+    action,
+    details
+  });
+  db.logs = db.logs.slice(0,500);
+}
+
 function initLogin(){
   qs("loginUser").innerHTML = users.map((u,i)=>`<option value="${i}">${u.name} - ${u.role}</option>`).join("");
   if(currentUser){ openApp(); }
@@ -408,7 +519,7 @@ function openApp(){
   const first = menuByRole[currentUser.role][0]; showSection(first);
 }
 function roleLabel(r){
-  return {STORE:"Store Supervisor",BOSS:"Boss Read Only",TANK:"Tank Supervisor",PIPE_SUP:"Pipe Supervisor",FITTING_SUP:"Fitting Supervisor"}[r]||r;
+  return {ADMIN:"Admin",STORE:"Store Supervisor",BOSS:"Boss Read Only",TANK:"Tank Supervisor",PIPE_SUP:"Pipe Supervisor",FITTING_SUP:"Fitting Supervisor"}[r]||r;
 }
 function buildMenu(){
   const list = menuByRole[currentUser.role];
@@ -455,6 +566,7 @@ function addMaterial(){
   const code=qs("mCode").value.trim(), name=qs("mName").value.trim();
   if(!code || !name){ alert("Enter material code and name."); return; }
   db.materials.push({code,name,cat:qs("mCat").value,pack:+qs("mPack").value||25,opening:+qs("mOpening").value||0,avg:+qs("mAvg").value||0});
+  logAction("MATERIAL ADDED", `${code} - ${name}`);
   save(); renderAll(); alert("Material added.");
 }
 function getMat(code){ return db.materials.find(m=>m.code===code); }
@@ -471,10 +583,11 @@ function addStock(type){
   } else {
     row.item=qs("outItem").value; row.dept=qs("outDept").value; row.remarks=qs("outRemarks").value;
   }
-  db.tx.push(row); save(); renderAll(); alert(type==="IN"?"Material In saved.":"Material Out saved.");
+  db.tx.push(row); logAction(type==="IN"?"MATERIAL IN":"MATERIAL OUT", `${code} | ${qty} kg`); save(); renderAll(); alert(type==="IN"?"Material In saved.":"Material Out saved.");
 }
 function addOnWay(){
   db.onway.push({date:qs("owDate").value||today,code:qs("owMaterial").value,qty:+qs("owQty").value||0,supplier:qs("owSupplier").value,arrival:qs("owArrival").value,status:qs("owStatus").value});
+  logAction("ON THE WAY ORDER SAVED", `${qs("owMaterial").value} | ${qs("owQty").value} kg`);
   save(); renderAll(); alert("On-the-way order saved.");
 }
 function calcMix(){
@@ -495,6 +608,68 @@ function calcMix(){
   qs("slipMeta").textContent = `${type} | Mixes: ${n} | Previous balance deducted from first material: ${prev} kg`;
   table("mixResult",["Code","Material","Required Kg","Prev Bal","Net Kg","Bag Kg","Bags"],rows);
 }
+
+function recipeOptions(){
+  ensureRecipeFields();
+  if(qs("recipeMat")) qs("recipeMat").innerHTML = db.materials.map(m=>`<option value="${m.code}">${m.code} - ${m.name}</option>`).join("");
+  if(qs("mixType")) qs("mixType").innerHTML = db.recipes.map(r=>`<option>${r.name}</option>`).join("");
+}
+function addRecipeLine(){
+  ensureRecipeFields();
+  const name = qs("recipeName").value.trim();
+  const code = qs("recipeMat").value;
+  const kg = +qs("recipeKg").value || 0;
+  if(!name || !code || kg<=0){ alert("Enter mix name, raw material code and kg per mix."); return; }
+  db.recipeDraft.push({name,code,kg});
+  qs("recipeKg").value = 0;
+  logAction("MIX DRAFT LINE ADDED", `${name} | ${code} | ${kg} kg`);
+  save(); renderAll();
+}
+function clearRecipeDraft(){
+  db.recipeDraft = [];
+  logAction("MIX DRAFT CLEARED", "Draft cleared");
+  save(); renderAll();
+}
+function saveRecipe(){
+  ensureRecipeFields();
+  if(!db.recipeDraft.length){ alert("Add at least one material to the mix draft."); return; }
+  const name = db.recipeDraft[0].name;
+  const lines = db.recipeDraft.map(x=>({code:x.code,kg:x.kg}));
+  const existing = db.recipes.find(r=>r.name.toLowerCase()===name.toLowerCase());
+  if(existing) existing.lines = lines;
+  else db.recipes.push({name,lines});
+  db.recipeDraft = [];
+  logAction("MIX RECIPE SAVED", name);
+  save(); renderAll();
+  if(qs("mixType")) qs("mixType").value = name;
+  alert("Mix recipe saved.");
+}
+function deleteRecipe(name){
+  if(!confirm("Delete this mix recipe?")) return;
+  db.recipes = db.recipes.filter(r=>r.name!==name);
+  logAction("MIX RECIPE DELETED", name);
+  save(); renderAll();
+}
+function calcMix(){
+  ensureRecipeFields();
+  const recipe = db.recipes.find(r=>r.name===qs("mixType").value);
+  if(!recipe){ table("mixResult",["Info"],[["No saved mix recipe found."]]); return; }
+  const n = +qs("mixCount").value || 1;
+  const prev = +qs("mixPrev").value || 0;
+  const rows = recipe.lines.map((line,i)=>{
+    const m = getMat(line.code) || {name:"Unknown Material",pack:25};
+    const total = Number(line.kg||0) * n;
+    const deduction = i===0 ? prev : 0;
+    const net = Math.max(total - deduction, 0);
+    const pack = Number(m.pack||25);
+    const bags = net / pack;
+    return [line.code,m.name,total.toFixed(3),deduction.toFixed(3),net.toFixed(3),pack,bags.toFixed(3)];
+  });
+  qs("slipMeta").textContent = `${recipe.name} | Mixes/Bags: ${n} | Previous balance deducted from first material: ${prev} kg | Generated: ${nowStamp()}`;
+  table("mixResult",["Code","Material","Required Kg","Prev Bal","Net Kg","Bag Kg","Bags"],rows);
+  logAction("MIX CALCULATED", `${recipe.name} x ${n}`);
+}
+
 function printSlip(){
   const content = qs("printArea").innerHTML;
   const w = window.open("", "", "width=800,height=600");
@@ -510,22 +685,25 @@ function addProduction(){
     good:+qs("pGood").value||0,offcut:+qs("pOffcut").value||0,rejected:+qs("pRejected").value||0,fallen:+qs("pFallen").value||0,
     wastage:+qs("pWastage").value||0,checked:qs("pChecked").value,variance
   });
+  logAction("PRODUCTION SAVED", `${qs("pItem").value} | ${qs("pMachine").value} | Qty ${qs("pQty").value}`);
   save(); renderAll();
   alert(Math.abs(variance)>0.01 ? `Production saved. Material variance: ${variance.toFixed(2)} kg` : "Production saved. Material balance OK.");
 }
 function addScrap(){
   db.scrap.push({date:qs("sDate").value||today,item:qs("sItem").value,machine:qs("sMachine").value,type:qs("sType").value,qty:+qs("sQty").value||0,remarks:qs("sRemarks").value});
+  logAction("SCRAP SAVED", `${qs("sItem").value} | ${qs("sType").value} | ${qs("sQty").value} kg`);
   save(); renderAll(); alert("Scrap saved.");
 }
 function setSiloMat(){ qs("sfMaterial").value = siloMap[qs("sfSilo").value]; }
 function addSiloFeed(){
   db.silo.push({date:qs("sfDate").value||today,shift:qs("sfShift").value,silo:qs("sfSilo").value,code:qs("sfMaterial").value,required:+qs("sfRequired").value||0,actual:+qs("sfActual").value||0});
+  logAction("SILO FEED SAVED", `Silo ${qs("sfSilo").value} | ${qs("sfMaterial").value} | Actual ${qs("sfActual").value} kg`);
   save(); renderAll(); alert("Silo feed saved.");
 }
 function monthFilter(row){ return (row.date||"").slice(0,7)===monthKey; }
 
 function renderAll(){
-  materialOptions(); itemOptions();
+  materialOptions(); itemOptions(); recipeOptions();
   ["inDate","outDate","owDate","pDate","sDate","sfDate"].forEach(id=>{ if(qs(id) && !qs(id).value) qs(id).value=today; });
   setSiloMat(); calcMix();
   const inM=getMat(qs("inMaterial")?.value); if(inM) qs("inPack").value=inM.pack;
@@ -560,6 +738,15 @@ function renderAll(){
 
   table("onWayTable",["Date","Material","Qty","Supplier","Expected","Status"],db.onway.map(o=>[o.date,o.code+" - "+(getMat(o.code)?.name||""),Number(o.qty).toLocaleString(),o.supplier||"",o.arrival||"",`<span class="tag info">${o.status}</span>`]));
   table("siloTable",["Date","Shift","Silo","Material","Required","Actual","Difference"],db.silo.map(s=>[s.date,s.shift,"Silo "+s.silo,s.code,Number(s.required).toLocaleString(),Number(s.actual).toLocaleString(),(Number(s.actual)-Number(s.required)).toLocaleString()]));
+  ensureRecipeFields();
+  if(qs("recipeDraftTable")) table("recipeDraftTable",["Mix Name","Code","Material","Kg Per Mix"], db.recipeDraft.length ? db.recipeDraft.map(x=>[x.name,x.code,getMat(x.code)?.name||"",x.kg]) : [["-","No draft lines","-","-"]]);
+  if(qs("savedRecipesTable")) table("savedRecipesTable",["Mix Name","Materials","Action"], db.recipes.map(r=>[
+    r.name,
+    r.lines.map(l=>`${l.code} ${getMat(l.code)?.name||""}: ${l.kg} kg`).join("<br>"),
+    `<button class="btn-red" onclick="deleteRecipe('${r.name.replaceAll("'","\\'")}')">Delete</button>`
+  ]));
+  if(qs("activityTable")) table("activityTable",["Time","User","Role","Action","Details"], (db.logs||[]).map(l=>[l.time,l.user,l.role,l.action,l.details]));
+
 
   qs("kMaterials").textContent=db.materials.length;
   qs("kOrder").textContent=db.materials.filter(m=>coverMonths(m)<4).length;
@@ -590,7 +777,7 @@ function exportCSV(type){
   }
   download(`gentex_${type}.csv`, rows.map(r=>r.map(csvEscape).join(",")).join("\n"), "text/csv");
 }
-initLogin();
+migrateV12(); save(); initLogin();
 </script>
 </body>
 </html>
