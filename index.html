@@ -178,6 +178,7 @@ tr:last-child td{border-bottom:0}
             <div><label>Bags</label><input id="inBags" type="number" value="0"></div>
             <div><label>Pack Size Kg</label><input id="inPack" type="number" value="25"></div>
             <div><label>Qty Kg</label><input id="inQty" type="number" value="0"></div>
+            <div><label>Department</label><select id="inDept"></select></div>
             <div><label>Supplier</label><input id="inSupplier"></div>
             <div><label>Invoice / GRN No.</label><input id="inDoc"></div>
             <div><label>Remarks</label><input id="inRemarks"></div>
@@ -196,11 +197,11 @@ tr:last-child td{border-bottom:0}
             <div><label>Bags</label><input id="outBags" type="number" value="0"></div>
             <div><label>Pack Size Kg</label><input id="outPack" type="number" value="25"></div>
             <div><label>Quantity Kg</label><input id="outQty" type="number" value="0"></div>
-            <div><label>Issued To / Department</label><input id="outDept" placeholder="Optional"></div>
-            <div><label>Remarks</label><input id="outRemarks"></div>
+            <div><label>Department</label><select id="outDept"></select></div>
+            <div><label>Issued To / Remarks</label><input id="outRemarks" placeholder="Optional"></div>
           </div>
           <div class="actions"><button class="btn" onclick="addStock('OUT')">Save Material Out</button></div>
-          <p class="note">Official item categories: PIPE, FITTINGS, GUTTERS, FASCIA, PROFILES, WPC. Stock reduces only by Material Out entries.</p>
+          <p class="note">Department and item dropdowns are taken from your Material Out Excel categories. Stock reduces only by Material Out entries.</p>
         </div>
       </section>
 
@@ -221,37 +222,11 @@ tr:last-child td{border-bottom:0}
       </section>
 
       <section id="mixing" class="section">
-        <h2>Mixing Master & Calculator</h2>
-
+        <h2>Mixing Calculator</h2>
         <div class="grid two">
           <div class="card editable">
-            <h3>Create / Update Mix Recipe</h3>
             <div class="formgrid">
-              <div><label>Mix Name</label><input id="recipeName" placeholder="PVC Pipe Grey"></div>
-              <div><label>Raw Material Code</label><select id="recipeMat"></select></div>
-              <div><label>Kg Per Mix</label><input id="recipeKg" type="number" value="0"></div>
-            </div>
-            <div class="actions">
-              <button class="btn" onclick="addRecipeLine()">Add Material To Mix</button>
-              <button class="btn-light" onclick="clearRecipeDraft()">Clear Draft</button>
-            </div>
-            <p class="note">Create any mix manually using raw material code. Pack weight is taken from Material Master, so 25 kg bags and special bags like Polycom-F 20 kg are handled automatically.</p>
-          </div>
-
-          <div class="card">
-            <h3>Current Mix Draft</h3>
-            <table id="recipeDraftTable"></table>
-            <div class="actions">
-              <button class="btn" onclick="saveRecipe()">Save Mix Recipe</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid two" style="margin-top:14px">
-          <div class="card editable">
-            <h3>Calculate Order Bags From Saved Mix</h3>
-            <div class="formgrid">
-              <div><label>Select Saved Mix</label><select id="mixType"></select></div>
+              <div><label>Mix Type</label><select id="mixType"><option>PVC Pipe Grey</option><option>PVC Gutter White</option><option>HDPE Tank</option><option>HDPE Pipe</option><option>WPC</option></select></div>
               <div><label>Number of Mixes</label><input id="mixCount" type="number" value="1"></div>
               <div><label>Previous Balance Kg</label><input id="mixPrev" type="number" value="0"></div>
             </div>
@@ -261,17 +236,11 @@ tr:last-child td{border-bottom:0}
             </div>
             <p class="note">Planning only. It does not deduct stock until Material Out is saved.</p>
           </div>
-
           <div class="card" id="printArea">
             <h3>Material Request Slip</h3>
             <div class="small" id="slipMeta"></div>
             <table id="mixResult"></table>
           </div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <h3>Saved Mix Recipes</h3>
-          <table id="savedRecipesTable"></table>
         </div>
       </section>
 
@@ -359,7 +328,7 @@ tr:last-child td{border-bottom:0}
 <script>
 const today = new Date().toISOString().slice(0,10);
 const monthKey = today.slice(0,7);
-const items = ["PIPE","FITTINGS","GUTTERS","FASCIA","PROFILES","WPC","TANKS"];
+const items = ["FASCIA", "FITTINGS", "GUTTERS", "HDPE FITTING", "HDPE PIPE", "PIPE", "PPR FITTING", "PPR PIPE", "PROFILES", "SUPPORT BRACKET", "TANK", "WPC"];
 const siloMap = {"1":"RM024","2":"RM019","3":"RM023","4":"RM020"};
 
 const users = [
@@ -387,30 +356,32 @@ const menuNames = {
 };
 
 const seed = {
-  materials:[
-    {code:"RM001",name:"PVC RESIN K67",cat:"PVC",pack:25,opening:1218875,avg:300000},
-    {code:"RM002",name:"FILLER CACO3 (Coated)",cat:"PVC",pack:25,opening:150300,avg:60000},
-    {code:"RM003",name:"PVC STABILIZER PIPE",cat:"PVC",pack:25,opening:13380,avg:4500},
-    {code:"RM004",name:"TITANIUM DIOXIDE",cat:"PVC",pack:25,opening:18000,avg:3000},
-    {code:"RM019",name:"HDPE Material RM019",cat:"HDPE",pack:25,opening:50000,avg:18000},
-    {code:"RM020",name:"3310",cat:"HDPE",pack:25,opening:30000,avg:9000},
-    {code:"RM023",name:"Widespec",cat:"HDPE",pack:25,opening:42000,avg:12000},
-    {code:"RM024",name:"HDPE Material RM024",cat:"HDPE",pack:25,opening:35000,avg:11000},
-    {code:"RM999",name:"Polycom-F",cat:"Additive",pack:20,opening:6000,avg:1000}
-  ],
+  schemaVersion:"1.1-full-april-materials",
+  materials:[{"code": "RM001", "name": "PVC RESIN K67", "cat": "PVC", "pack": 25, "opening": 1218875.0, "avg": 350000.0}, {"code": "RM002", "name": "FILLER  CAC03 (Coated)", "cat": "PVC", "pack": 25, "opening": 150300.0, "avg": 107812.5}, {"code": "RM003", "name": "PVC  STABILIZER PIPE", "cat": "PVC", "pack": 25, "opening": 13380.0, "avg": 9000.0}, {"code": "RM004", "name": "TITANIUM DIOXIDE (TIo2)", "cat": "PVC", "pack": 25, "opening": 18000.0, "avg": 5256.25}, {"code": "RM010", "name": "DOP", "cat": "PVC", "pack": 25, "opening": 6600.0, "avg": 2050.0}, {"code": "RM014", "name": "PVC RESIN K-57", "cat": "PVC", "pack": 25, "opening": 460575.0, "avg": 185425.0}, {"code": "UNCODED-001", "name": "ZB 175", "cat": "Additive", "pack": 25, "opening": 650.0, "avg": 0.0}, {"code": "RM104", "name": "HDPE PIPE SCRAP MATUGA", "cat": "Scrap", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM026", "name": "M/B. BLACK - HDPE", "cat": "HDPE", "pack": 25, "opening": 12125.0, "avg": 2925.0}, {"code": "RM033", "name": "HD-BLOW SCRAP", "cat": "Scrap", "pack": 25, "opening": 725873.7, "avg": 480000.0}, {"code": "RM035", "name": "PP-R (RA140E)", "cat": "PPR", "pack": 25, "opening": 892775.0, "avg": 115000.0}, {"code": "RM039", "name": "M/B. GREY - PP-R 04054", "cat": "PPR", "pack": 25, "opening": 5650.0, "avg": 2000.0}, {"code": "RM008", "name": "OPTICAL BRIGHTNER", "cat": "Additive", "pack": 25, "opening": 450.0, "avg": 60.0}, {"code": "RM009", "name": "WHITE PIGMENT", "cat": "Color", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM012", "name": "STERIC ACID / 1801", "cat": "Additive", "pack": 25, "opening": 1725.0, "avg": 468.75}, {"code": "RM013", "name": "GUTTER SCRAP", "cat": "Scrap", "pack": 25, "opening": 10732.88, "avg": 5307.5}, {"code": "RM029", "name": "M/B. GREEN - (04005)", "cat": "Color", "pack": 25, "opening": 3325.0, "avg": 62.5}, {"code": "RM018", "name": "PVC FITTENG SCRAP", "cat": "Scrap", "pack": 25, "opening": 502.0, "avg": 32000.0}, {"code": "RM019", "name": "PE 100", "cat": "HDPE", "pack": 25, "opening": 1444575.0, "avg": 380000.0}, {"code": "RM020", "name": "PE 80", "cat": "HDPE", "pack": 25, "opening": 1023179.08, "avg": 487091.98}, {"code": "RM021", "name": "LLD LE2270 (BORSTER)", "cat": "Additive", "pack": 25, "opening": 51275.0, "avg": 2500.0}, {"code": "RM090", "name": "LDPE POLY. LOW DENSITY FT 6230", "cat": "Additive", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM088", "name": "RECYCLE PE 80", "cat": "Additive", "pack": 25, "opening": 49900.0, "avg": 11000.0}, {"code": "RM089", "name": "RECYCLE PE 100", "cat": "Additive", "pack": 25, "opening": 31760.0, "avg": 16790.0}, {"code": "RM037", "name": "M/B. GREEN - PP-R 04059", "cat": "PPR", "pack": 25, "opening": 2075.0, "avg": 0.0}, {"code": "RM096", "name": "PE FILLER", "cat": "PVC", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM097", "name": "POLYCOM - 101 HDPE", "cat": "HDPE", "pack": 20, "opening": 1380.0, "avg": 40.0}, {"code": "RM054", "name": "POLYCOM -F PVC ( Processing Aid )", "cat": "PVC", "pack": 20, "opening": 26680.0, "avg": 2820.0}, {"code": "UNCODED-002", "name": "PVC PIPE SCRAP GREY", "cat": "Scrap", "pack": 25, "opening": 12966.17, "avg": 9000.0}, {"code": "RM022", "name": "LLDPE (ROTO)", "cat": "Additive", "pack": 25, "opening": 50375.0, "avg": 3325.0}, {"code": "RM024", "name": "HD-BLOW FB 1460", "cat": "HDPE", "pack": 25, "opening": 665525.0, "avg": 460000.0}, {"code": "RM027", "name": "M/B WHITE - HDPE", "cat": "HDPE", "pack": 25, "opening": 7875.0, "avg": 2800.0}, {"code": "RM028", "name": "M/B. BLUE - HDPE", "cat": "HDPE", "pack": 25, "opening": 1925.0, "avg": 400.0}, {"code": "RM032", "name": "PE Town Scrap", "cat": "Scrap", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM034", "name": "ROTO SCRAP", "cat": "Scrap", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM041", "name": "PP COPO INJECTION (BA212E)", "cat": "Additive", "pack": 25, "opening": 161425.0, "avg": 30000.0}, {"code": "UNCODED-003", "name": "LLDPE (ROTO) POWDER", "cat": "Additive", "pack": 25, "opening": 0.0, "avg": 518.75}, {"code": "RM044", "name": "POM KEPITAL-F20-03 FITTING", "cat": "Additive", "pack": 25, "opening": 32475.0, "avg": 5000.0}, {"code": "RM045", "name": "HDPE FITTING SCRAP BLUE", "cat": "Scrap", "pack": 25, "opening": 176.0, "avg": 3000.0}, {"code": "RM046", "name": "GRIP RING SCRAP", "cat": "Scrap", "pack": 25, "opening": 4224.0, "avg": 700.0}, {"code": "RM047", "name": "HDPE FITTING BODY SCRAP", "cat": "Scrap", "pack": 25, "opening": 744.0, "avg": 3200.0}, {"code": "RM049", "name": "BRACKET & PIPE CLIP SCRAP", "cat": "Scrap", "pack": 25, "opening": 13978.0, "avg": 3300.0}, {"code": "RM053", "name": "Stabiliser YQ-102 (NX-305)", "cat": "Additive", "pack": 25, "opening": 5025.0, "avg": 1681.25}, {"code": "RM108", "name": "Processing Aid CPE (135A)", "cat": "Additive", "pack": 25, "opening": 23800.0, "avg": 18.75}, {"code": "RM055", "name": "Foaming adjust ACR 401", "cat": "Additive", "pack": 25, "opening": 6075.0, "avg": 6.25}, {"code": "RM057", "name": "Foaming adjust K400 (ZB-750)", "cat": "Additive", "pack": 25, "opening": 25325.0, "avg": 6825.0}, {"code": "RM058", "name": "Foaming agent AC (MSV-206)", "cat": "Additive", "pack": 25, "opening": 1725.0, "avg": 406.25}, {"code": "RM059", "name": "Foaming agent NC (MS-107)", "cat": "Additive", "pack": 25, "opening": 1500.0, "avg": 437.5}, {"code": "RM060", "name": "EXT. Lubricant PE WAX (PR-700)", "cat": "Additive", "pack": 25, "opening": 1075.0, "avg": 337.5}, {"code": "RM061", "name": "INT. Lubricant G60", "cat": "Additive", "pack": 25, "opening": 1975.0, "avg": 0.0}, {"code": "RM062", "name": "Lubricant 3316F (OA6)", "cat": "Additive", "pack": 25, "opening": 1225.0, "avg": 168.75}, {"code": "RM065", "name": "SPC Scrap", "cat": "Scrap", "pack": 25, "opening": 6640.0, "avg": 0.0}, {"code": "RM016", "name": "Epoxy Oil ( 200 ltr Drum)", "cat": "Additive", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM069", "name": "Foam Board Scrap (BLACK)", "cat": "Scrap", "pack": 25, "opening": 1343.0, "avg": 0.0}, {"code": "RM070", "name": "Foam Board Scrap (WHITE)", "cat": "Scrap", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM015", "name": "Pvc Stabilizer", "cat": "PVC", "pack": 25, "opening": 8950.0, "avg": 5000.0}, {"code": "RM043", "name": "RECYCLE PP INJECTION", "cat": "Additive", "pack": 25, "opening": 10775.0, "avg": 22000.0}, {"code": "RM048", "name": "MASTER GREY CLIP 04011", "cat": "Color", "pack": 25, "opening": 400.0, "avg": 100.0}, {"code": "RM050", "name": "PP-R SCRAP PIPE & FITTING", "cat": "Scrap", "pack": 25, "opening": 14524.14, "avg": 5000.0}, {"code": "RM051", "name": "Impact modifier (ACM 40)", "cat": "Additive", "pack": 25, "opening": 1700.0, "avg": 0.0}, {"code": "RM052", "name": "Impact modifier (ACM 50)", "cat": "Additive", "pack": 25, "opening": 1975.0, "avg": 0.0}, {"code": "RM056", "name": "Foaming adjust NCR 61", "cat": "Additive", "pack": 25, "opening": 6200.0, "avg": 400.0}, {"code": "RM063", "name": "Lubricant LH 703", "cat": "Additive", "pack": 25, "opening": 825.0, "avg": 0.0}, {"code": "RM064", "name": "Wood Powder", "cat": "Additive", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM066", "name": "WPC Scrap", "cat": "Scrap", "pack": 25, "opening": 185.0, "avg": 0.0}, {"code": "RM068", "name": "Profile scrap clip", "cat": "Scrap", "pack": 25, "opening": 13995.6, "avg": 3000.0}, {"code": "RM071", "name": "Foam Board Scrap (GREY)", "cat": "Scrap", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM072", "name": "Wear layer", "cat": "Additive", "pack": 25, "opening": 57.0, "avg": 0.0}, {"code": "RM073", "name": "UV Undercoat", "cat": "Additive", "pack": 25, "opening": 280.0, "avg": 0.0}, {"code": "RM074", "name": "UV coating", "cat": "Additive", "pack": 25, "opening": 440.0, "avg": 0.0}, {"code": "RM075", "name": "PVC Film (1000 mm) - Mogany", "cat": "PVC", "pack": 25, "opening": 9.0, "avg": 0.0}, {"code": "RM076", "name": "PVC Film (1000 mm) - Light Grey", "cat": "PVC", "pack": 25, "opening": 7.0, "avg": 0.0}, {"code": "RM077", "name": "PVC film (1000 mm) - Dark Oak", "cat": "PVC", "pack": 25, "opening": 5.0, "avg": 0.0}, {"code": "RM078", "name": "PVC Film (1000 mm) - Oak", "cat": "PVC", "pack": 25, "opening": 2.0, "avg": 0.0}, {"code": "UNCODED-004", "name": "PVC FILM FRENCH OAK", "cat": "PVC", "pack": 25, "opening": 3.0, "avg": 0.0}, {"code": "UNCODED-005", "name": "PVC FILM WALNUT", "cat": "PVC", "pack": 25, "opening": 7.0, "avg": 0.0}, {"code": "UNCODED-006", "name": "PVC FILM WENGE", "cat": "PVC", "pack": 25, "opening": 2.0, "avg": 0.0}, {"code": "RM079", "name": "Hot Stamping Film - Mohgany", "cat": "Additive", "pack": 25, "opening": 1.0, "avg": 0.0}, {"code": "RM080", "name": "Hot Stamping Film - White Grain Oak", "cat": "Additive", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM081", "name": "Hot Stamping Film - Dark Wengy", "cat": "Additive", "pack": 25, "opening": 3.0, "avg": 0.0}, {"code": "RM082", "name": "Hot Stamping Film - Wengy", "cat": "Additive", "pack": 25, "opening": 6.0, "avg": 0.0}, {"code": "RM083", "name": "Hot Stamping Film - Brown", "cat": "Additive", "pack": 25, "opening": 6.0, "avg": 0.0}, {"code": "RM084", "name": "Hot Stamping Film - Dark Brown Marble", "cat": "Additive", "pack": 25, "opening": 4.0, "avg": 0.0}, {"code": "RM085", "name": "Hot Stamping Film - Light Brown Marble", "cat": "Additive", "pack": 25, "opening": 4.0, "avg": 0.0}, {"code": "RM086", "name": "Hot Stamping Film - White Marble", "cat": "Additive", "pack": 25, "opening": 1.0, "avg": 0.0}, {"code": "RM087", "name": "Hot Stamping Film - Marble", "cat": "Additive", "pack": 25, "opening": 2.0, "avg": 0.0}, {"code": "RM092", "name": "FACIA BOARD SCRAP", "cat": "Scrap", "pack": 25, "opening": 8689.5, "avg": 15865.0}, {"code": "UNCODED-007", "name": "FACIA BOARD KAVER ROLL", "cat": "Additive", "pack": 25, "opening": 14.0, "avg": 12.25}, {"code": "3350", "name": "DOOR HINGES", "cat": "Additive", "pack": 25, "opening": 10000.0, "avg": 987.5}, {"code": "SF703", "name": "RUBBER WASHERS 20 MM", "cat": "Additive", "pack": 25, "opening": 218717.0, "avg": 170000.0}, {"code": "SF704", "name": "RUBBER WASHERS 25 MM", "cat": "Additive", "pack": 25, "opening": 951251.0, "avg": 90000.0}, {"code": "SF705", "name": "RUBBER WASHERS 32 MM", "cat": "Additive", "pack": 25, "opening": 1805802.0, "avg": 86250.0}, {"code": "SF706", "name": "RUBBER WASHERS 40 MM", "cat": "Additive", "pack": 25, "opening": 590974.0, "avg": 40000.0}, {"code": "SF707", "name": "RUBBER WASHERS 50 MM", "cat": "Additive", "pack": 25, "opening": 327340.0, "avg": 22000.0}, {"code": "SF708", "name": "RUBBER WASHERS 63 MM", "cat": "Additive", "pack": 25, "opening": 164120.0, "avg": 20000.0}, {"code": "SF709", "name": "RUBBER WASHERS 75 MM", "cat": "Additive", "pack": 25, "opening": 12000.0, "avg": 1000.0}, {"code": "SF710", "name": "RUBBER WASHERS 90 MM", "cat": "Additive", "pack": 25, "opening": 2103.0, "avg": 3000.0}, {"code": "SF711", "name": "RUBBER WASHERS 110 MM", "cat": "Additive", "pack": 25, "opening": 10000.0, "avg": 700.0}, {"code": "SF900", "name": "FEMALE INSERT 1/2\"", "cat": "Additive", "pack": 25, "opening": 349200.0, "avg": 45000.0}, {"code": "SF901", "name": "FEMALE INSERT 3/4\"", "cat": "Additive", "pack": 25, "opening": 14946.0, "avg": 0.0}, {"code": "SF902", "name": "MALE INSERT 1/2\"", "cat": "Additive", "pack": 25, "opening": 1964.0, "avg": 8000.0}, {"code": "SF903", "name": "MALE INSERT 3/4\"", "cat": "Additive", "pack": 25, "opening": 9806.0, "avg": 2000.0}, {"code": "SF904", "name": "GATE VALVE 1/2\"", "cat": "Additive", "pack": 25, "opening": 32815.0, "avg": 7200.0}, {"code": "SF905", "name": "GATE VALVE 3/4 \"", "cat": "Additive", "pack": 25, "opening": 21480.0, "avg": 2500.0}, {"code": "SF120", "name": "110 MM O-RING", "cat": "Additive", "pack": 25, "opening": 231000.0, "avg": 30000.0}, {"code": "SF907", "name": "FEMALE INSERT 1\"", "cat": "Additive", "pack": 25, "opening": 24861.0, "avg": 3000.0}, {"code": "SF908", "name": "MALE INSERT 1\"", "cat": "Additive", "pack": 25, "opening": 26315.0, "avg": 0.0}, {"code": "UNCODED-008", "name": "SMALL FITTING BAGS", "cat": "Additive", "pack": 25, "opening": 26000.0, "avg": 10000.0}, {"code": "UNCODED-009", "name": "BIG FITTING BAGS", "cat": "Additive", "pack": 25, "opening": 17000.0, "avg": 10000.0}, {"code": "UNCODED-010", "name": "TILES BOX", "cat": "Additive", "pack": 25, "opening": 2376.0, "avg": 0.0}, {"code": "UNCODED-011", "name": "THREAD SEAL TAPE (BOX)", "cat": "Additive", "pack": 25, "opening": 166.0, "avg": 112.5}, {"code": "RM095", "name": "PP FILLER", "cat": "PVC", "pack": 25, "opening": 39000.0, "avg": 5225.0}, {"code": "UNCODED-012", "name": "1 1/2 INCH ACCESS CAP RUBBER", "cat": "Additive", "pack": 25, "opening": 173400.0, "avg": 10600.0}, {"code": "UNCODED-013", "name": "2 INCH ACCESS CAP RUBBER", "cat": "Additive", "pack": 25, "opening": 22150.0, "avg": 6900.0}, {"code": "RM098", "name": "POLYCOM - H1 PVC", "cat": "PVC", "pack": 20, "opening": 0.0, "avg": 0.0}, {"code": "UNCODED-014", "name": "R200P BIG FITTING PP", "cat": "Additive", "pack": 25, "opening": 0.0, "avg": 11875.0}, {"code": "UNCODED-015", "name": "INJECTION (MUKWANO)", "cat": "Additive", "pack": 25, "opening": 53415.0, "avg": 18725.0}, {"code": "UNCODED-016", "name": "RUBBER PPR UNION 25 MM", "cat": "PPR", "pack": 25, "opening": 67200.0, "avg": 400.0}, {"code": "UNCODED-017", "name": "RUBBER PPR UNION 32 MM", "cat": "PPR", "pack": 25, "opening": 79560.0, "avg": 4060.0}, {"code": "RM030", "name": "HDPE YELLOW MASTER", "cat": "HDPE", "pack": 25, "opening": 1500.0, "avg": 31.25}, {"code": "RM107", "name": "TPV (PPR FITTING)", "cat": "PPR", "pack": 25, "opening": 1975.0, "avg": 0.0}, {"code": "UNCODED-018", "name": "3/4 O-RING FOR PPR VALVE", "cat": "PPR", "pack": 25, "opening": 19950.0, "avg": 0.0}, {"code": "UNCODED-019", "name": "CPE PLOYCOM -1M1", "cat": "Additive", "pack": 25, "opening": 2300.0, "avg": 18.75}],
   tx:[],
   onway:[],
   production:[],
   scrap:[],
-  silo:[],
-  recipes:[
-    {name:"PVC Pipe Grey", lines:[{code:"RM001",kg:100},{code:"RM002",kg:50},{code:"RM003",kg:5},{code:"RM999",kg:20}]},
-    {name:"HDPE Tank", lines:[{code:"RM024",kg:80},{code:"RM019",kg:40},{code:"RM023",kg:25},{code:"RM020",kg:20}]}
-  ],
-  recipeDraft:[]
+  silo:[]
 };
 
 let db = JSON.parse(localStorage.getItem("gentexOneViewV11") || "null") || seed;
+if(!db.schemaVersion || db.schemaVersion !== seed.schemaVersion){
+  const oldTx = db.tx || [];
+  const oldOnway = db.onway || [];
+  const oldProduction = db.production || [];
+  const oldScrap = db.scrap || [];
+  const oldSilo = db.silo || [];
+  const oldRecipes = db.recipes || seed.recipes || [];
+  db = JSON.parse(JSON.stringify(seed));
+  db.tx = oldTx;
+  db.onway = oldOnway;
+  db.production = oldProduction;
+  db.scrap = oldScrap;
+  db.silo = oldSilo;
+  db.recipes = oldRecipes;
+  save();
+}
 let currentUser = JSON.parse(localStorage.getItem("gentexOneViewUser") || "null");
 
 const qs = id => document.getElementById(id);
@@ -462,7 +433,7 @@ function materialOptions(){
 }
 function itemOptions(){
   const opts = items.map(i=>`<option>${i}</option>`).join("");
-  ["outItem","pItem","sItem"].forEach(id=>{ if(qs(id)) qs(id).innerHTML=opts; });
+  ["outItem","pItem","sItem","inDept","outDept"].forEach(id=>{ if(qs(id)) qs(id).innerHTML=opts; });
 }
 function openOnWay(code){
   return db.onway.filter(o=>o.code===code && o.status!=="Received").reduce((a,b)=>a+Number(b.qty||0),0);
@@ -496,7 +467,7 @@ function addStock(type){
   const qty = +qs(prefix+"Qty").value || bags*pack;
   const row = {type,code,date:qs(prefix+"Date").value||today,bags,pack,qty};
   if(type==="IN"){
-    row.supplier=qs("inSupplier").value; row.doc=qs("inDoc").value; row.remarks=qs("inRemarks").value;
+    row.dept=qs("inDept").value; row.supplier=qs("inSupplier").value; row.doc=qs("inDoc").value; row.remarks=qs("inRemarks").value;
   } else {
     row.item=qs("outItem").value; row.dept=qs("outDept").value; row.remarks=qs("outRemarks").value;
   }
@@ -506,66 +477,22 @@ function addOnWay(){
   db.onway.push({date:qs("owDate").value||today,code:qs("owMaterial").value,qty:+qs("owQty").value||0,supplier:qs("owSupplier").value,arrival:qs("owArrival").value,status:qs("owStatus").value});
   save(); renderAll(); alert("On-the-way order saved.");
 }
-function ensureRecipeFields(){
-  if(!db.recipes) db.recipes = [
-    {name:"PVC Pipe Grey", lines:[{code:"RM001",kg:100},{code:"RM002",kg:50},{code:"RM003",kg:5},{code:"RM999",kg:20}]},
-    {name:"HDPE Tank", lines:[{code:"RM024",kg:80},{code:"RM019",kg:40},{code:"RM023",kg:25},{code:"RM020",kg:20}]}
-  ];
-  if(!db.recipeDraft) db.recipeDraft = [];
-}
-function recipeOptions(){
-  ensureRecipeFields();
-  if(qs("recipeMat")) qs("recipeMat").innerHTML = db.materials.map(m=>`<option value="${m.code}">${m.code} - ${m.name}</option>`).join("");
-  if(qs("mixType")) qs("mixType").innerHTML = db.recipes.map(r=>`<option>${r.name}</option>`).join("");
-}
-function addRecipeLine(){
-  ensureRecipeFields();
-  const name = qs("recipeName").value.trim();
-  const code = qs("recipeMat").value;
-  const kg = +qs("recipeKg").value || 0;
-  if(!name || !code || kg<=0){ alert("Enter mix name, raw material code and kg per mix."); return; }
-  db.recipeDraft.push({name,code,kg});
-  qs("recipeKg").value = 0;
-  save(); renderAll();
-}
-function clearRecipeDraft(){
-  db.recipeDraft = [];
-  save(); renderAll();
-}
-function saveRecipe(){
-  ensureRecipeFields();
-  if(!db.recipeDraft.length){ alert("Add at least one material to the mix draft."); return; }
-  const name = db.recipeDraft[0].name;
-  const lines = db.recipeDraft.map(x=>({code:x.code,kg:x.kg}));
-  const existing = db.recipes.find(r=>r.name.toLowerCase()===name.toLowerCase());
-  if(existing) existing.lines = lines;
-  else db.recipes.push({name,lines});
-  db.recipeDraft = [];
-  save(); renderAll();
-  qs("mixType").value = name;
-  alert("Mix recipe saved.");
-}
-function deleteRecipe(name){
-  if(!confirm("Delete this mix recipe?")) return;
-  db.recipes = db.recipes.filter(r=>r.name!==name);
-  save(); renderAll();
-}
 function calcMix(){
-  ensureRecipeFields();
-  const recipe = db.recipes.find(r=>r.name===qs("mixType").value);
-  if(!recipe){ table("mixResult",["Info"],[["No saved mix recipe found."]]); return; }
-  const n = +qs("mixCount").value || 1;
-  const prev = +qs("mixPrev").value || 0;
-  const rows = recipe.lines.map((line,i)=>{
-    const m = getMat(line.code) || {name:"Unknown Material",pack:25};
-    const total = Number(line.kg||0) * n;
-    const deduction = i===0 ? prev : 0;
-    const net = Math.max(total - deduction, 0);
-    const pack = Number(m.pack||25);
-    const bags = net / pack;
-    return [line.code,m.name,total.toFixed(2),deduction.toFixed(2),net.toFixed(2),pack,bags.toFixed(2)];
+  const n = +qs("mixCount").value || 1, prev = +qs("mixPrev").value || 0;
+  let recipe=[
+    ["RM001","PVC Resin",100,25],
+    ["RM002","Filler",50,25],
+    ["RM003","Stabilizer",5,25],
+    ["RM999","Polycom-F",20,20]
+  ];
+  const type = qs("mixType").value;
+  if(type.includes("HDPE")) recipe=[["RM024","RM024",80,25],["RM019","RM019",40,25],["RM023","Widespec",25,25],["RM020","3310",20,25]];
+  if(type==="WPC") recipe=[["RM001","PVC Resin",70,25],["RM002","Filler",70,25],["RM999","Polycom-F",20,20]];
+  const rows = recipe.map((r,i)=>{
+    const total = r[2]*n, deduction = i===0?prev:0, net = Math.max(total-deduction,0), bags = net/r[3];
+    return [r[0],r[1],total.toFixed(2),deduction.toFixed(2),net.toFixed(2),r[3],bags.toFixed(2)];
   });
-  qs("slipMeta").textContent = `${recipe.name} | Mixes: ${n} | Previous balance deducted from first material: ${prev} kg`;
+  qs("slipMeta").textContent = `${type} | Mixes: ${n} | Previous balance deducted from first material: ${prev} kg`;
   table("mixResult",["Code","Material","Required Kg","Prev Bal","Net Kg","Bag Kg","Bags"],rows);
 }
 function printSlip(){
@@ -598,7 +525,7 @@ function addSiloFeed(){
 function monthFilter(row){ return (row.date||"").slice(0,7)===monthKey; }
 
 function renderAll(){
-  materialOptions(); itemOptions(); recipeOptions();
+  materialOptions(); itemOptions();
   ["inDate","outDate","owDate","pDate","sDate","sfDate"].forEach(id=>{ if(qs(id) && !qs(id).value) qs(id).value=today; });
   setSiloMat(); calcMix();
   const inM=getMat(qs("inMaterial")?.value); if(inM) qs("inPack").value=inM.pack;
@@ -633,14 +560,6 @@ function renderAll(){
 
   table("onWayTable",["Date","Material","Qty","Supplier","Expected","Status"],db.onway.map(o=>[o.date,o.code+" - "+(getMat(o.code)?.name||""),Number(o.qty).toLocaleString(),o.supplier||"",o.arrival||"",`<span class="tag info">${o.status}</span>`]));
   table("siloTable",["Date","Shift","Silo","Material","Required","Actual","Difference"],db.silo.map(s=>[s.date,s.shift,"Silo "+s.silo,s.code,Number(s.required).toLocaleString(),Number(s.actual).toLocaleString(),(Number(s.actual)-Number(s.required)).toLocaleString()]));
-  ensureRecipeFields();
-  table("recipeDraftTable",["Mix Name","Code","Material","Kg Per Mix"], db.recipeDraft.length ? db.recipeDraft.map(x=>[x.name,x.code,getMat(x.code)?.name||"",x.kg]) : [["-","No draft lines","-","-"]]);
-  table("savedRecipesTable",["Mix Name","Materials","Action"], db.recipes.map(r=>[
-    r.name,
-    r.lines.map(l=>`${l.code} ${getMat(l.code)?.name||""}: ${l.kg} kg`).join("<br>"),
-    `<button class="btn-red" onclick="deleteRecipe('${r.name.replaceAll("'","\\'")}')">Delete</button>`
-  ]));
-
 
   qs("kMaterials").textContent=db.materials.length;
   qs("kOrder").textContent=db.materials.filter(m=>coverMonths(m)<4).length;
@@ -666,12 +585,12 @@ function exportCSV(type){
     rows=[["Code","Material","Category","PackKg","CurrentStock","OnWay","AvgUseMonth","CoverMonths","Status"]];
     db.materials.forEach(m=>rows.push([m.code,m.name,m.cat,m.pack,stockOf(m.code),openOnWay(m.code),m.avg,coverMonths(m).toFixed(2),status(m)[0]]));
   } else {
-    rows=[["Date","Type","Code","Material","Item","Bags","Pack","Qty","Remarks"]];
-    db.tx.forEach(t=>rows.push([t.date,t.type,t.code,getMat(t.code)?.name||"",t.item||"",t.bags,t.pack,t.qty,t.remarks||""]));
+    rows=[["Date","Type","Code","Material","Item","Department","Bags","Pack","Qty","Remarks"]];
+    db.tx.forEach(t=>rows.push([t.date,t.type,t.code,getMat(t.code)?.name||"",t.item||"",t.dept||"",t.bags,t.pack,t.qty,t.remarks||""]));
   }
   download(`gentex_${type}.csv`, rows.map(r=>r.map(csvEscape).join(",")).join("\n"), "text/csv");
 }
-ensureRecipeFields(); save(); initLogin();
+initLogin();
 </script>
 </body>
 </html>
