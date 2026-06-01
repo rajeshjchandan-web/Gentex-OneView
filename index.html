@@ -3,781 +3,379 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gentex OneView v1.1</title>
+<title>Gentex OneView v1.3</title>
 <style>
-:root{
-  --bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--brand:#0f766e;
-  --brand2:#134e4a;--line:#e6e9ef;--danger:#dc2626;--warn:#d97706;--ok:#16a34a;
-  --blue:#2563eb;--dark:#0f172a;
-}
+:root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--brand:#0f766e;--brand2:#134e4a;--line:#e6e9ef;--danger:#dc2626;--warn:#d97706;--ok:#16a34a;--dark:#0f172a}
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
 .hidden{display:none!important}
 .login-wrap{min-height:100vh;display:grid;place-items:center;padding:18px;background:linear-gradient(135deg,#0f766e,#0f172a)}
-.login-card{width:100%;max-width:430px;background:#fff;border-radius:24px;padding:28px;box-shadow:0 24px 70px rgba(0,0,0,.25)}
-.login-card h1{margin:0;font-size:30px;color:#0f766e}
-.login-card p{margin:6px 0 20px;color:var(--muted)}
+.login-card{width:100%;max-width:450px;background:#fff;border-radius:24px;padding:28px;box-shadow:0 24px 70px rgba(0,0,0,.25)}
+.login-card h1{margin:0;font-size:30px;color:#0f766e}.login-card p{margin:6px 0 20px;color:var(--muted)}
 label{display:block;margin:9px 0 5px;font-size:12px;font-weight:700;color:#344054}
 input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:14px}
-textarea{min-height:70px}
 button{border:0;border-radius:12px;padding:11px 14px;cursor:pointer;font-weight:700}
-.btn{background:var(--brand);color:#fff}
-.btn:hover{background:var(--brand2)}
-.btn-light{background:#eef2f7;color:#172033}
-.btn-dark{background:#334155;color:#fff}
-.btn-red{background:#fee2e2;color:#991b1b}
+.btn{background:var(--brand);color:#fff}.btn:hover{background:var(--brand2)}
+.btn-light{background:#eef2f7;color:#172033}.btn-dark{background:#334155;color:#fff}.btn-red{background:#fee2e2;color:#991b1b}.btn-blue{background:#dbeafe;color:#1e40af}
 .demo-users{font-size:12px;color:#475467;background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:14px;line-height:1.45}
-.app{min-height:100vh}
 header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.brand h1{margin:0;font-size:24px}
-.brand p{margin:3px 0 0;font-size:13px;opacity:.9}
-.userbox{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px}
-.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.16)}
+.brand h1{margin:0;font-size:24px}.brand p{margin:3px 0 0;font-size:13px;opacity:.9}
+.userbox{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.16)}
 .layout{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 76px)}
 nav{background:#0b3b39;color:#d1fae5;padding:14px 10px}
 nav button{width:100%;background:transparent;color:#d1fae5;text-align:left;padding:12px 14px;margin:3px 0;border-radius:12px;font-size:14px}
 nav button:hover,nav button.active{background:rgba(255,255,255,.14);color:#fff}
-main{padding:18px;overflow:auto}
-.section{display:none}
-.section.active{display:block}
-h2{margin:0 0 14px;font-size:24px}
-h3{margin:0 0 10px;font-size:16px}
-.grid{display:grid;gap:14px}
-.cards{grid-template-columns:repeat(4,minmax(150px,1fr))}
-.two{grid-template-columns:1.1fr .9fr}
-.three{grid-template-columns:repeat(3,1fr)}
+main{padding:18px;overflow:auto}.section{display:none}.section.active{display:block}
+h2{margin:0 0 14px;font-size:24px}h3{margin:0 0 10px;font-size:16px}
+.grid{display:grid;gap:14px}.cards{grid-template-columns:repeat(4,minmax(150px,1fr))}.two{grid-template-columns:1.1fr .9fr}.three{grid-template-columns:repeat(3,1fr)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 8px 22px rgba(15,23,42,.05)}
-.kpi .label{font-size:13px;color:var(--muted)}
-.kpi .value{font-size:25px;font-weight:800;margin-top:7px}
-.kpi .sub{font-size:12px;color:var(--muted);margin-top:4px}
+.kpi .label{font-size:13px;color:var(--muted)}.kpi .value{font-size:25px;font-weight:800;margin-top:7px}.kpi .sub{font-size:12px;color:var(--muted);margin-top:4px}
 table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:12px;overflow:hidden}
 th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-th{background:#f8fafc;color:#344054}
-tr:last-child td{border-bottom:0}
-.tag{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800}
-.tag.danger{background:#fee2e2;color:#991b1b}
-.tag.warn{background:#fef3c7;color:#92400e}
-.tag.ok{background:#dcfce7;color:#166534}
-.tag.info{background:#dbeafe;color:#1e40af}
-.tag.gray{background:#f1f5f9;color:#334155}
-.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
-.note{font-size:13px;color:var(--muted);line-height:1.45}
-.mobilebar{display:none}
-.searchrow{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
-.searchrow input{max-width:340px}
-.small{font-size:12px;color:var(--muted)}
-.alert{padding:10px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:13px;margin:10px 0}
-.footer-note{font-size:12px;color:#667085;margin-top:10px}
-@media(max-width:950px){
-  .layout{grid-template-columns:1fr}
-  nav{display:none}
-  .mobilebar{display:block;background:#0b3b39;padding:10px}
-  .mobilebar select{background:#fff}
-  main{padding:12px}
-  .cards,.two,.three,.formgrid{grid-template-columns:1fr}
-}
+th{background:#f8fafc;color:#344054}tr:last-child td{border-bottom:0}
+.tag{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800}.tag.danger{background:#fee2e2;color:#991b1b}.tag.warn{background:#fef3c7;color:#92400e}.tag.ok{background:#dcfce7;color:#166534}.tag.info{background:#dbeafe;color:#1e40af}.tag.gray{background:#f1f5f9;color:#334155}
+.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.note{font-size:13px;color:var(--muted);line-height:1.45}.alert{padding:10px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:13px;margin:10px 0}
+.mobilebar{display:none}.searchrow{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}.searchrow input{max-width:340px}.small{font-size:12px;color:var(--muted)}
+@media(max-width:950px){.layout{grid-template-columns:1fr}nav{display:none}.mobilebar{display:block;background:#0b3b39;padding:10px}.mobilebar select{background:#fff}main{padding:12px}.cards,.two,.three,.formgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
     <h1>Gentex OneView</h1>
     <p>Stock • Production • Scrap • Planning</p>
-    <label>Select User</label>
-    <select id="loginUser"></select>
-    <label>Password</label>
-    <input id="loginPass" type="password" value="1234" placeholder="Demo password">
-    <div class="actions">
-      <button class="btn" onclick="login()">Login</button>
-      <button class="btn-light" onclick="resetAll()">Reset Demo Data</button>
-    </div>
-    <div class="demo-users">
-      Demo password for all users: <b>1234</b><br>
-      Users: Store Supervisor, Boss 1, Boss 2, Boss 3, Tank Supervisor, Pipe Supervisor, Fitting Supervisor.
-    </div>
+    <label>Select User</label><select id="loginUser"></select>
+    <label>Password</label><input id="loginPass" type="password" value="1234">
+    <div class="actions"><button class="btn" onclick="login()">Login</button><button class="btn-light" onclick="resetAll()">Reset Demo Data</button></div>
+    <div class="demo-users">Demo password: <b>1234</b><br>Users include Admin, Store, Boss, Tank, Pipe and Fitting supervisors.</div>
   </div>
 </div>
 
-<div id="appScreen" class="app hidden">
-  <header>
-    <div class="brand">
-      <h1>Gentex OneView</h1>
-      <p>Manufacturing Intelligence Platform</p>
-    </div>
-    <div class="userbox">
-      <span class="pill" id="currentUserLabel"></span>
-      <span class="pill" id="currentRoleLabel"></span>
-      <button class="btn-light" onclick="logout()">Logout</button>
-    </div>
-  </header>
+<div id="appScreen" class="hidden">
+<header>
+  <div class="brand"><h1>Gentex OneView</h1><p>Manufacturing Intelligence Platform</p></div>
+  <div class="userbox"><span class="pill" id="currentUserLabel"></span><span class="pill" id="currentRoleLabel"></span><button class="btn-light" onclick="logout()">Logout</button></div>
+</header>
+<div class="mobilebar"><select id="mobileNav" onchange="showSection(this.value)"></select></div>
+<div class="layout">
+<nav id="sideNav"></nav>
+<main>
 
-  <div class="mobilebar">
-    <select id="mobileNav" onchange="showSection(this.value)"></select>
-  </div>
-
-  <div class="layout">
-    <nav id="sideNav"></nav>
-    <main>
-      <section id="dashboard" class="section active">
-        <h2>Boss Dashboard</h2>
-        <div class="grid cards">
-          <div class="card kpi"><div class="label">Total Materials</div><div class="value" id="kMaterials">0</div><div class="sub">Material master</div></div>
-          <div class="card kpi"><div class="label">Order Now</div><div class="value" id="kOrder">0</div><div class="sub">Below 4-month cover</div></div>
-          <div class="card kpi"><div class="label">Watch</div><div class="value" id="kWatch">0</div><div class="sub">4 to 5 months cover</div></div>
-          <div class="card kpi"><div class="label">On The Way</div><div class="value" id="kOnWay">0 kg</div><div class="sub">Pending arrivals</div></div>
-        </div>
-        <div class="grid two" style="margin-top:14px">
-          <div class="card">
-            <h3>What To Order Now</h3>
-            <table id="criticalTable"></table>
-          </div>
-          <div class="card">
-            <h3>Consumption by Item This Month</h3>
-            <table id="itemConsumptionTable"></table>
-          </div>
-        </div>
-        <div class="grid two" style="margin-top:14px">
-          <div class="card">
-            <h3>Production Today</h3>
-            <table id="prodTodayTable"></table>
-          </div>
-          <div class="card">
-            <h3>Scrap Summary This Month</h3>
-            <table id="scrapMonthTable"></table>
-          </div>
-        </div>
-      </section>
-
-      <section id="materials" class="section">
-        <h2>Material Master</h2>
-        <div class="card editable">
-          <div class="formgrid">
-            <div><label>Material Code</label><input id="mCode" placeholder="RM024"></div>
-            <div><label>Material Name</label><input id="mName" placeholder="HDPE Material"></div>
-            <div><label>Category</label><select id="mCat"><option>HDPE</option><option>PVC</option><option>Additive</option><option>Color</option><option>Scrap</option><option>Other</option></select></div>
-            <div><label>Pack Weight Kg</label><input id="mPack" type="number" value="25"></div>
-            <div><label>Opening Stock Kg</label><input id="mOpening" type="number" value="0"></div>
-            <div><label>4-Month Avg Use / Month Kg</label><input id="mAvg" type="number" value="0"></div>
-          </div>
-          <div class="actions"><button class="btn" onclick="addMaterial()">Add Material</button></div>
-        </div>
-        <div class="card" style="margin-top:14px">
-          <div class="searchrow"><h3 style="margin:0">Materials</h3><input id="materialSearch" placeholder="Search material..." oninput="renderAll()"></div>
-          <table id="materialsTable"></table>
-        </div>
-      </section>
-
-      <section id="stockin" class="section">
-        <h2>Material In</h2>
-        <div class="card editable">
-          <div class="formgrid">
-            <div><label>Date</label><input id="inDate" type="date"></div>
-            <div><label>Material</label><select id="inMaterial"></select></div>
-            <div><label>Bags</label><input id="inBags" type="number" value="0"></div>
-            <div><label>Pack Size Kg</label><input id="inPack" type="number" value="25"></div>
-            <div><label>Qty Kg</label><input id="inQty" type="number" value="0"></div>
-            <div><label>Department</label><select id="inDept"></select></div>
-            <div><label>Supplier</label><input id="inSupplier"></div>
-            <div><label>Invoice / GRN No.</label><input id="inDoc"></div>
-            <div><label>Remarks</label><input id="inRemarks"></div>
-          </div>
-          <div class="actions"><button class="btn" onclick="addStock('IN')">Save Material In</button></div>
-        </div>
-      </section>
-
-      <section id="stockout" class="section">
-        <h2>Material Out / Store Issue</h2>
-        <div class="card editable">
-          <div class="formgrid">
-            <div><label>Date</label><input id="outDate" type="date"></div>
-            <div><label>Material</label><select id="outMaterial"></select></div>
-            <div><label>Item</label><select id="outItem"></select></div>
-            <div><label>Bags</label><input id="outBags" type="number" value="0"></div>
-            <div><label>Pack Size Kg</label><input id="outPack" type="number" value="25"></div>
-            <div><label>Quantity Kg</label><input id="outQty" type="number" value="0"></div>
-            <div><label>Department</label><select id="outDept"></select></div>
-            <div><label>Issued To / Remarks</label><input id="outRemarks" placeholder="Optional"></div>
-          </div>
-          <div class="actions"><button class="btn" onclick="addStock('OUT')">Save Material Out</button></div>
-          <p class="note">Department and item dropdowns are taken from your Material Out Excel categories. Stock reduces only by Material Out entries.</p>
-        </div>
-      </section>
-
-      <section id="onway" class="section">
-        <h2>On-The-Way Orders</h2>
-        <div class="card editable">
-          <div class="formgrid">
-            <div><label>Order Date</label><input id="owDate" type="date"></div>
-            <div><label>Material</label><select id="owMaterial"></select></div>
-            <div><label>Quantity Kg</label><input id="owQty" type="number" value="0"></div>
-            <div><label>Supplier</label><input id="owSupplier"></div>
-            <div><label>Expected Arrival</label><input id="owArrival" type="date"></div>
-            <div><label>Status</label><select id="owStatus"><option>On The Way</option><option>Received</option><option>Delayed</option></select></div>
-          </div>
-          <div class="actions"><button class="btn" onclick="addOnWay()">Save Order</button></div>
-        </div>
-        <div class="card" style="margin-top:14px"><h3>Open On-The-Way Orders</h3><table id="onWayTable"></table></div>
-      </section>
-
-      <section id="mixing" class="section">
-        <h2>Mixing Calculator</h2>
-        <div class="grid two">
-          <div class="card editable">
-            <div class="formgrid">
-              <div><label>Mix Type</label><select id="mixType"><option>PVC Pipe Grey</option><option>PVC Gutter White</option><option>HDPE Tank</option><option>HDPE Pipe</option><option>WPC</option></select></div>
-              <div><label>Number of Mixes</label><input id="mixCount" type="number" value="1"></div>
-              <div><label>Previous Balance Kg</label><input id="mixPrev" type="number" value="0"></div>
-            </div>
-            <div class="actions">
-              <button class="btn" onclick="calcMix()">Calculate Material Request</button>
-              <button class="btn-dark" onclick="printSlip()">Print Slip</button>
-            </div>
-            <p class="note">Planning only. It does not deduct stock until Material Out is saved.</p>
-          </div>
-          <div class="card" id="printArea">
-            <h3>Material Request Slip</h3>
-            <div class="small" id="slipMeta"></div>
-            <table id="mixResult"></table>
-          </div>
-        </div>
-      </section>
-
-
-      <section id="mixing" class="section">
-        <h2>Mixing Master & Calculator</h2>
-        <div class="grid two">
-          <div class="card editable">
-            <h3>Create / Update Mix Recipe</h3>
-            <div class="formgrid">
-              <div><label>Mix Name</label><input id="recipeName" placeholder="HDPE Tank 25kg Bag Mix"></div>
-              <div><label>Raw Material Code</label><select id="recipeMat"></select></div>
-              <div><label>Kg Per Mix</label><input id="recipeKg" type="number" value="0" step="0.001"></div>
-            </div>
-            <div class="actions">
-              <button class="btn" onclick="addRecipeLine()">Add Material To Mix</button>
-              <button class="btn-light" onclick="clearRecipeDraft()">Clear Draft</button>
-            </div>
-            <p class="note">Create any mix manually using raw material code. The app uses Material Master pack weight to calculate bags.</p>
-          </div>
-          <div class="card">
-            <h3>Current Mix Draft</h3>
-            <table id="recipeDraftTable"></table>
-            <div class="actions"><button class="btn" onclick="saveRecipe()">Save Mix Recipe</button></div>
-          </div>
-        </div>
-        <div class="grid two" style="margin-top:14px">
-          <div class="card editable">
-            <h3>Calculate Bags From Saved Mix</h3>
-            <div class="formgrid">
-              <div><label>Select Saved Mix</label><select id="mixType"></select></div>
-              <div><label>Number of Mixes / Bags</label><input id="mixCount" type="number" value="1" step="0.001"></div>
-              <div><label>Previous Balance Kg</label><input id="mixPrev" type="number" value="0" step="0.001"></div>
-            </div>
-            <div class="actions">
-              <button class="btn" onclick="calcMix()">Calculate Material Request</button>
-              <button class="btn-dark" onclick="printSlip()">Print Slip</button>
-            </div>
-          </div>
-          <div class="card" id="printArea">
-            <h3>Material Request Slip</h3>
-            <div class="small" id="slipMeta"></div>
-            <table id="mixResult"></table>
-          </div>
-        </div>
-        <div class="card" style="margin-top:14px">
-          <h3>Saved Mix Recipes</h3>
-          <table id="savedRecipesTable"></table>
-        </div>
-      </section>
-
-      <section id="production" class="section">
-        <h2>Production Entry</h2>
-        <div class="card editable">
-          <div class="formgrid">
-            <div><label>Production Date</label><input id="pDate" type="date"></div>
-            <div><label>Shift</label><select id="pShift"><option>Day (08:00-17:00)</option><option>Night (17:00-08:00)</option></select></div>
-            <div><label>Item</label><select id="pItem"></select></div>
-            <div><label>Machine</label><input id="pMachine" placeholder="1000L / PE-1 / 338-A"></div>
-            <div><label>Operator</label><input id="pOperator"></div>
-            <div><label>Worked Hours</label><input id="pHours" type="number" value="8"></div>
-            <div><label>Previous Balance Kg</label><input id="pPrev" type="number" value="0"></div>
-            <div><label>New Mix Kg</label><input id="pNew" type="number" value="0"></div>
-            <div><label>Used Kg</label><input id="pUsed" type="number" value="0"></div>
-            <div><label>Present Balance Kg</label><input id="pPresent" type="number" value="0"></div>
-            <div><label>Product / Size / Class</label><input id="pProduct"></div>
-            <div><label>Quantity Produced</label><input id="pQty" type="number" value="0"></div>
-            <div><label>Good Tank / Good Output</label><input id="pGood" type="number" value="0"></div>
-            <div><label>Off Cut Kg</label><input id="pOffcut" type="number" value="0"></div>
-            <div><label>Rejected Kg</label><input id="pRejected" type="number" value="0"></div>
-            <div><label>Fallen Kg</label><input id="pFallen" type="number" value="0"></div>
-            <div><label>Wastage Kg</label><input id="pWastage" type="number" value="0"></div>
-            <div><label>Checked By</label><input id="pChecked"></div>
-          </div>
-          <div class="actions"><button class="btn" onclick="addProduction()">Save Production</button></div>
-          <p class="note">Night shift belongs to the same production date even though it ends next morning.</p>
-        </div>
-      </section>
-
-      <section id="scrap" class="section">
-        <h2>Scrap Entry</h2>
-        <div class="card editable">
-          <div class="formgrid">
-            <div><label>Date</label><input id="sDate" type="date"></div>
-            <div><label>Item</label><select id="sItem"></select></div>
-            <div><label>Machine</label><input id="sMachine"></div>
-            <div><label>Scrap Type</label><select id="sType"><option>Off Cut</option><option>Rejected</option><option>Fallen</option><option>Reused</option></select></div>
-            <div><label>Qty Kg</label><input id="sQty" type="number" value="0"></div>
-            <div><label>Remarks</label><input id="sRemarks"></div>
-          </div>
-          <div class="actions"><button class="btn" onclick="addScrap()">Save Scrap</button></div>
-        </div>
-      </section>
-
-      <section id="silo" class="section">
-        <h2>Silo Feed Planning</h2>
-        <div class="card editable">
-          <div class="alert">Silo balance is not physically measured. Gentex OneView tracks required feed vs actual feed.</div>
-          <div class="formgrid">
-            <div><label>Date</label><input id="sfDate" type="date"></div>
-            <div><label>Shift</label><select id="sfShift"><option>Day (08:00-17:00)</option><option>Night (17:00-08:00)</option></select></div>
-            <div><label>Silo</label><select id="sfSilo" onchange="setSiloMat()"><option value="1">Silo 1 - RM024</option><option value="2">Silo 2 - RM019</option><option value="3">Silo 3 - RM023 Widespec</option><option value="4">Silo 4 - RM020 3310</option></select></div>
-            <div><label>Material Code</label><input id="sfMaterial" readonly></div>
-            <div><label>Required Feed Kg</label><input id="sfRequired" type="number" value="0"></div>
-            <div><label>Actual Feed Kg</label><input id="sfActual" type="number" value="0"></div>
-          </div>
-          <div class="actions"><button class="btn" onclick="addSiloFeed()">Save Silo Feed</button></div>
-        </div>
-        <div class="card" style="margin-top:14px"><h3>Silo Feed History</h3><table id="siloTable"></table></div>
-      </section>
-
-      <section id="purchase" class="section">
-        <h2>Purchase Planning</h2>
-        <div class="card">
-          <h3>Coverage and Recommended Action</h3>
-          <table id="purchaseTable"></table>
-          <p class="footer-note">Lead time rule: below 4 months = ORDER NOW, 4-5 months = WATCH, above 5 months = OK.</p>
-        </div>
-      </section>
-
-
-      <section id="activity" class="section">
-        <h2>Activity Log</h2>
-        <div class="card">
-          <h3>All User Activity</h3>
-          <table id="activityTable"></table>
-          <p class="note">Every save entry records user, role, date and exact time automatically.</p>
-        </div>
-      </section>
-
-      <section id="reports" class="section">
-        <h2>Reports & Export</h2>
-        <div class="grid three">
-          <div class="card"><h3>Monthly Raw Material Summary</h3><p class="note">Opening + In - Out = Closing. Designed to match your boss report.</p><button class="btn" onclick="exportCSV('materials')">Export Stock CSV</button></div>
-          <div class="card"><h3>Material Transactions</h3><p class="note">Material In and Out register.</p><button class="btn" onclick="exportCSV('transactions')">Export Transactions CSV</button></div>
-          <div class="card"><h3>Backup</h3><p class="note">Download complete local data as JSON.</p><button class="btn-dark" onclick="downloadJSON()">Export Backup JSON</button></div>
-        </div>
-      </section>
-    </main>
-  </div>
+<section id="dashboard" class="section active">
+<h2>Dashboard</h2>
+<div class="grid cards">
+<div class="card kpi"><div class="label">Total Materials</div><div class="value" id="kMaterials">0</div><div class="sub">Material master</div></div>
+<div class="card kpi"><div class="label">Order Now</div><div class="value" id="kOrder">0</div><div class="sub">Below 4-month cover</div></div>
+<div class="card kpi"><div class="label">Pending Requests</div><div class="value" id="kRequests">0</div><div class="sub">Material order requests</div></div>
+<div class="card kpi"><div class="label">On The Way</div><div class="value" id="kOnWay">0 kg</div><div class="sub">Pending arrivals</div></div>
 </div>
+<div class="grid two" style="margin-top:14px">
+<div class="card"><h3>What To Order Now</h3><table id="criticalTable"></table></div>
+<div class="card"><h3>Pending Material Requests</h3><table id="dashReqTable"></table></div>
+</div>
+</section>
+
+<section id="materials" class="section">
+<h2>Material Master</h2>
+<div class="card">
+<div class="formgrid">
+<div><label>Material Code</label><input id="mCode" placeholder="RM024"></div>
+<div><label>Material Name</label><input id="mName"></div>
+<div><label>Category</label><select id="mCat"><option>HDPE</option><option>PVC</option><option>Additive</option><option>Color</option><option>Scrap</option><option>Other</option></select></div>
+<div><label>Pack Weight Kg</label><input id="mPack" type="number" value="25"></div>
+<div><label>Opening Stock Kg</label><input id="mOpening" type="number" value="0"></div>
+<div><label>4-Month Avg Use / Month Kg</label><input id="mAvg" type="number" value="0"></div>
+</div>
+<div class="actions"><button class="btn" onclick="addMaterial()">Add Material</button></div>
+</div>
+<div class="card" style="margin-top:14px"><div class="searchrow"><h3 style="margin:0">Materials</h3><input id="materialSearch" placeholder="Search material..." oninput="renderAll()"></div><table id="materialsTable"></table></div>
+</section>
+
+<section id="stockin" class="section">
+<h2>Material In</h2>
+<div class="card">
+<div class="formgrid">
+<div><label>Date</label><input id="inDate" type="date"></div>
+<div><label>Material</label><select id="inMaterial"></select></div>
+<div><label>Department</label><select id="inDept"></select></div>
+<div><label>Bags</label><input id="inBags" type="number" value="0"></div>
+<div><label>Pack Size Kg</label><input id="inPack" type="number" value="25"></div>
+<div><label>Qty Kg</label><input id="inQty" type="number" value="0"></div>
+<div><label>Supplier</label><input id="inSupplier"></div>
+<div><label>Invoice / GRN No.</label><input id="inDoc"></div>
+<div><label>Remarks</label><input id="inRemarks"></div>
+</div><div class="actions"><button class="btn" onclick="addStock('IN')">Save Material In</button></div>
+</div>
+</section>
+
+<section id="stockout" class="section">
+<h2>Material Out / Store Issue</h2>
+<div class="card">
+<div class="formgrid">
+<div><label>Date</label><input id="outDate" type="date"></div>
+<div><label>Material</label><select id="outMaterial"></select></div>
+<div><label>Item</label><select id="outItem"></select></div>
+<div><label>Department</label><select id="outDept"></select></div>
+<div><label>Bags</label><input id="outBags" type="number" value="0"></div>
+<div><label>Pack Size Kg</label><input id="outPack" type="number" value="25"></div>
+<div><label>Quantity Kg</label><input id="outQty" type="number" value="0"></div>
+<div><label>Remarks</label><input id="outRemarks"></div>
+</div><div class="actions"><button class="btn" onclick="addStock('OUT')">Save Material Out</button></div>
+<p class="note">Stock reduces only by Material Out entries.</p>
+</div>
+</section>
+
+<section id="mixing" class="section">
+<h2>Mixing Recipe Master</h2>
+<div class="grid two">
+<div class="card">
+<h3>Create / Update Mix Recipe</h3>
+<div class="formgrid">
+<div><label>Mix Name</label><input id="recipeName" placeholder="HDPE Tank 25kg Bag Mix"></div>
+<div><label>Item / Department</label><select id="recipeItem"></select></div>
+<div><label>Raw Material Code</label><select id="recipeMat"></select></div>
+<div><label>Kg Per Mix / Batch</label><input id="recipeKg" type="number" value="0" step="0.001"></div>
+</div>
+<div class="actions"><button class="btn" onclick="addRecipeLine()">Add Material To Mix</button><button class="btn-light" onclick="clearRecipeDraft()">Clear Draft</button></div>
+<p class="note">Example: create tank recipe with RM024, RM019, RM020, RM026, RM027, RM033 etc. Pack weight comes from Material Master.</p>
+</div>
+<div class="card">
+<h3>Current Mix Draft</h3><table id="recipeDraftTable"></table>
+<div class="actions"><button class="btn" onclick="saveRecipe()">Save Mix Recipe</button></div>
+</div>
+</div>
+<div class="card" style="margin-top:14px"><h3>Saved Mix Recipes</h3><table id="savedRecipesTable"></table></div>
+</section>
+
+<section id="request" class="section">
+<h2>Material Order Request</h2>
+<div class="grid two">
+<div class="card">
+<h3>Request Material by Number of Mixes</h3>
+<div class="formgrid">
+<div><label>Request Date</label><input id="reqDate" type="date"></div>
+<div><label>Item</label><select id="reqItem" onchange="filterRecipesForRequest()"></select></div>
+<div><label>Select Mix Recipe</label><select id="reqRecipe"></select></div>
+<div><label>Number of Mixes</label><input id="reqMixCount" type="number" value="1" step="0.001"></div>
+<div><label>Previous Balance Kg</label><input id="reqPrev" type="number" value="0" step="0.001"></div>
+<div><label>Required For / Remarks</label><input id="reqRemarks" placeholder="Machine / product / shift"></div>
+</div>
+<div class="actions">
+<button class="btn-blue" onclick="previewRequest()">Preview Bags</button>
+<button class="btn" onclick="submitRequest()">Submit Request To Store</button>
+<button class="btn-dark" onclick="printRequestPreview()">Print Preview</button>
+</div>
+<p class="note">Tank, Pipe and Fitting supervisors use this screen to request material based on saved recipe and number of mixes.</p>
+</div>
+<div class="card" id="requestPrintArea">
+<h3>Request Preview</h3><div class="small" id="reqMeta"></div><table id="reqPreviewTable"></table>
+</div>
+</div>
+<div class="card" style="margin-top:14px"><h3>Material Requests</h3><table id="requestTable"></table></div>
+</section>
+
+<section id="onway" class="section">
+<h2>On-The-Way Orders</h2>
+<div class="card">
+<div class="formgrid">
+<div><label>Order Date</label><input id="owDate" type="date"></div>
+<div><label>Material</label><select id="owMaterial"></select></div>
+<div><label>Quantity Kg</label><input id="owQty" type="number" value="0"></div>
+<div><label>Supplier</label><input id="owSupplier"></div>
+<div><label>Expected Arrival</label><input id="owArrival" type="date"></div>
+<div><label>Status</label><select id="owStatus"><option>On The Way</option><option>Received</option><option>Delayed</option></select></div>
+</div><div class="actions"><button class="btn" onclick="addOnWay()">Save Order</button></div>
+</div>
+<div class="card" style="margin-top:14px"><h3>Open On-The-Way Orders</h3><table id="onWayTable"></table></div>
+</section>
+
+<section id="production" class="section">
+<h2>Production Entry</h2>
+<div class="card">
+<div class="formgrid">
+<div><label>Production Date</label><input id="pDate" type="date"></div>
+<div><label>Shift</label><select id="pShift"><option>Day (08:00-17:00)</option><option>Night (17:00-08:00)</option></select></div>
+<div><label>Item</label><select id="pItem"></select></div>
+<div><label>Machine</label><input id="pMachine"></div>
+<div><label>Operator</label><input id="pOperator"></div>
+<div><label>Worked Hours</label><input id="pHours" type="number" value="8"></div>
+<div><label>Previous Balance Kg</label><input id="pPrev" type="number" value="0"></div>
+<div><label>New Mix Kg</label><input id="pNew" type="number" value="0"></div>
+<div><label>Used Kg</label><input id="pUsed" type="number" value="0"></div>
+<div><label>Present Balance Kg</label><input id="pPresent" type="number" value="0"></div>
+<div><label>Product / Size / Class</label><input id="pProduct"></div>
+<div><label>Quantity Produced</label><input id="pQty" type="number" value="0"></div>
+<div><label>Off Cut Kg</label><input id="pOffcut" type="number" value="0"></div>
+<div><label>Rejected Kg</label><input id="pRejected" type="number" value="0"></div>
+<div><label>Fallen Kg</label><input id="pFallen" type="number" value="0"></div>
+<div><label>Wastage Kg</label><input id="pWastage" type="number" value="0"></div>
+<div><label>Checked By</label><input id="pChecked"></div>
+</div><div class="actions"><button class="btn" onclick="addProduction()">Save Production</button></div>
+</div>
+</section>
+
+<section id="scrap" class="section">
+<h2>Scrap Entry</h2>
+<div class="card"><div class="formgrid">
+<div><label>Date</label><input id="sDate" type="date"></div>
+<div><label>Item</label><select id="sItem"></select></div>
+<div><label>Machine</label><input id="sMachine"></div>
+<div><label>Scrap Type</label><select id="sType"><option>Off Cut</option><option>Rejected</option><option>Fallen</option><option>Reused</option></select></div>
+<div><label>Qty Kg</label><input id="sQty" type="number" value="0"></div>
+<div><label>Remarks</label><input id="sRemarks"></div>
+</div><div class="actions"><button class="btn" onclick="addScrap()">Save Scrap</button></div></div>
+</section>
+
+<section id="silo" class="section">
+<h2>Silo Feed Planning</h2>
+<div class="card"><div class="alert">Silo balance is not physically measured. We track required feed vs actual feed.</div>
+<div class="formgrid">
+<div><label>Date</label><input id="sfDate" type="date"></div>
+<div><label>Shift</label><select id="sfShift"><option>Day (08:00-17:00)</option><option>Night (17:00-08:00)</option></select></div>
+<div><label>Silo</label><select id="sfSilo" onchange="setSiloMat()"><option value="1">Silo 1 - RM024</option><option value="2">Silo 2 - RM019</option><option value="3">Silo 3 - RM023 Widespec</option><option value="4">Silo 4 - RM020 3310</option></select></div>
+<div><label>Material Code</label><input id="sfMaterial" readonly></div>
+<div><label>Required Feed Kg</label><input id="sfRequired" type="number" value="0"></div>
+<div><label>Actual Feed Kg</label><input id="sfActual" type="number" value="0"></div>
+</div><div class="actions"><button class="btn" onclick="addSiloFeed()">Save Silo Feed</button></div></div>
+<div class="card" style="margin-top:14px"><h3>Silo Feed History</h3><table id="siloTable"></table></div>
+</section>
+
+<section id="purchase" class="section">
+<h2>Purchase Planning</h2>
+<div class="card"><h3>Coverage and Recommended Action</h3><table id="purchaseTable"></table></div>
+</section>
+
+<section id="activity" class="section">
+<h2>Activity Log</h2>
+<div class="card"><h3>All User Activity</h3><table id="activityTable"></table></div>
+</section>
+
+<section id="reports" class="section">
+<h2>Reports & Export</h2>
+<div class="grid three">
+<div class="card"><h3>Stock CSV</h3><p class="note">Opening + In - Out = Closing.</p><button class="btn" onclick="exportCSV('materials')">Export Stock CSV</button></div>
+<div class="card"><h3>Transactions CSV</h3><p class="note">Material In and Out register.</p><button class="btn" onclick="exportCSV('transactions')">Export Transactions CSV</button></div>
+<div class="card"><h3>Backup</h3><p class="note">Download local data as JSON.</p><button class="btn-dark" onclick="downloadJSON()">Export Backup JSON</button></div>
+</div>
+</section>
+
+</main></div></div>
 
 <script>
 const today = new Date().toISOString().slice(0,10);
 const monthKey = today.slice(0,7);
-const items = ["FASCIA", "FITTINGS", "GUTTERS", "HDPE FITTING", "HDPE PIPE", "PIPE", "PPR FITTING", "PPR PIPE", "PROFILES", "SUPPORT BRACKET", "TANK", "WPC"];
+const items = ["PIPE","FITTINGS","GUTTERS","FASCIA","PROFILES","WPC","TANKS"];
+const departments = ["FASCIA","FITTINGS","GUTTERS","HDPE FITTING","HDPE PIPE","PIPE","PPR FITTING","PPR PIPE","PROFILES","SUPPORT BRACKET","TANK","WPC"];
 const siloMap = {"1":"RM024","2":"RM019","3":"RM023","4":"RM020"};
 
 const users = [
-  {name:"Admin",role:"ADMIN",pass:"1234"},
-  {name:"Store Supervisor",role:"STORE",pass:"1234"},
-  {name:"Boss 1",role:"BOSS",pass:"1234"},
-  {name:"Boss 2",role:"BOSS",pass:"1234"},
-  {name:"Boss 3",role:"BOSS",pass:"1234"},
-  {name:"Tank Supervisor",role:"TANK",pass:"1234"},
-  {name:"Pipe Supervisor",role:"PIPE_SUP",pass:"1234"},
-  {name:"Fitting Supervisor",role:"FITTING_SUP",pass:"1234"}
+{name:"Admin",role:"ADMIN",pass:"1234"},
+{name:"Store Supervisor",role:"STORE",pass:"1234"},
+{name:"Boss 1",role:"BOSS",pass:"1234"},
+{name:"Boss 2",role:"BOSS",pass:"1234"},
+{name:"Boss 3",role:"BOSS",pass:"1234"},
+{name:"Tank Supervisor",role:"TANK",pass:"1234"},
+{name:"Pipe Supervisor",role:"PIPE_SUP",pass:"1234"},
+{name:"Fitting Supervisor",role:"FITTING_SUP",pass:"1234"}
 ];
-
 const menuByRole = {
-  ADMIN:["dashboard","materials","stockin","stockout","onway","mixing","production","scrap","silo","purchase","activity","reports"],
-  STORE:["dashboard","materials","stockin","stockout","onway","mixing","purchase","activity","reports"],
-  BOSS:["dashboard","purchase","reports"],
-  TANK:["production","scrap","silo"],
-  PIPE_SUP:["production","scrap"],
-  FITTING_SUP:["production","scrap"]
+ADMIN:["dashboard","materials","stockin","stockout","mixing","request","onway","production","scrap","silo","purchase","activity","reports"],
+STORE:["dashboard","materials","stockin","stockout","mixing","request","onway","purchase","activity","reports"],
+BOSS:["dashboard","purchase","reports"],
+TANK:["request","production","scrap","silo"],
+PIPE_SUP:["request","production","scrap"],
+FITTING_SUP:["request","production","scrap"]
 };
-
-const menuNames = {
-  dashboard:"Dashboard",materials:"Material Master",stockin:"Material In",stockout:"Material Out",
-  onway:"On-The-Way",mixing:"Mixing Calculator",production:"Production",scrap:"Scrap",
-  silo:"Silo Feed",purchase:"Purchase Planning",activity:"Activity Log",reports:"Reports"
-};
+const menuNames = {dashboard:"Dashboard",materials:"Material Master",stockin:"Material In",stockout:"Material Out",mixing:"Mixing Recipe",request:"Material Request",onway:"On-The-Way",production:"Production",scrap:"Scrap",silo:"Silo Feed",purchase:"Purchase Planning",activity:"Activity Log",reports:"Reports"};
 
 const seed = {
-  schemaVersion:"1.1-full-april-materials",
-  materials:[{"code": "RM001", "name": "PVC RESIN K67", "cat": "PVC", "pack": 25, "opening": 1218875.0, "avg": 350000.0}, {"code": "RM002", "name": "FILLER  CAC03 (Coated)", "cat": "PVC", "pack": 25, "opening": 150300.0, "avg": 107812.5}, {"code": "RM003", "name": "PVC  STABILIZER PIPE", "cat": "PVC", "pack": 25, "opening": 13380.0, "avg": 9000.0}, {"code": "RM004", "name": "TITANIUM DIOXIDE (TIo2)", "cat": "PVC", "pack": 25, "opening": 18000.0, "avg": 5256.25}, {"code": "RM010", "name": "DOP", "cat": "PVC", "pack": 25, "opening": 6600.0, "avg": 2050.0}, {"code": "RM014", "name": "PVC RESIN K-57", "cat": "PVC", "pack": 25, "opening": 460575.0, "avg": 185425.0}, {"code": "UNCODED-001", "name": "ZB 175", "cat": "Additive", "pack": 25, "opening": 650.0, "avg": 0.0}, {"code": "RM104", "name": "HDPE PIPE SCRAP MATUGA", "cat": "Scrap", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM026", "name": "M/B. BLACK - HDPE", "cat": "HDPE", "pack": 25, "opening": 12125.0, "avg": 2925.0}, {"code": "RM033", "name": "HD-BLOW SCRAP", "cat": "Scrap", "pack": 25, "opening": 725873.7, "avg": 480000.0}, {"code": "RM035", "name": "PP-R (RA140E)", "cat": "PPR", "pack": 25, "opening": 892775.0, "avg": 115000.0}, {"code": "RM039", "name": "M/B. GREY - PP-R 04054", "cat": "PPR", "pack": 25, "opening": 5650.0, "avg": 2000.0}, {"code": "RM008", "name": "OPTICAL BRIGHTNER", "cat": "Additive", "pack": 25, "opening": 450.0, "avg": 60.0}, {"code": "RM009", "name": "WHITE PIGMENT", "cat": "Color", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM012", "name": "STERIC ACID / 1801", "cat": "Additive", "pack": 25, "opening": 1725.0, "avg": 468.75}, {"code": "RM013", "name": "GUTTER SCRAP", "cat": "Scrap", "pack": 25, "opening": 10732.88, "avg": 5307.5}, {"code": "RM029", "name": "M/B. GREEN - (04005)", "cat": "Color", "pack": 25, "opening": 3325.0, "avg": 62.5}, {"code": "RM018", "name": "PVC FITTENG SCRAP", "cat": "Scrap", "pack": 25, "opening": 502.0, "avg": 32000.0}, {"code": "RM019", "name": "PE 100", "cat": "HDPE", "pack": 25, "opening": 1444575.0, "avg": 380000.0}, {"code": "RM020", "name": "PE 80", "cat": "HDPE", "pack": 25, "opening": 1023179.08, "avg": 487091.98}, {"code": "RM021", "name": "LLD LE2270 (BORSTER)", "cat": "Additive", "pack": 25, "opening": 51275.0, "avg": 2500.0}, {"code": "RM090", "name": "LDPE POLY. LOW DENSITY FT 6230", "cat": "Additive", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM088", "name": "RECYCLE PE 80", "cat": "Additive", "pack": 25, "opening": 49900.0, "avg": 11000.0}, {"code": "RM089", "name": "RECYCLE PE 100", "cat": "Additive", "pack": 25, "opening": 31760.0, "avg": 16790.0}, {"code": "RM037", "name": "M/B. GREEN - PP-R 04059", "cat": "PPR", "pack": 25, "opening": 2075.0, "avg": 0.0}, {"code": "RM096", "name": "PE FILLER", "cat": "PVC", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM097", "name": "POLYCOM - 101 HDPE", "cat": "HDPE", "pack": 20, "opening": 1380.0, "avg": 40.0}, {"code": "RM054", "name": "POLYCOM -F PVC ( Processing Aid )", "cat": "PVC", "pack": 20, "opening": 26680.0, "avg": 2820.0}, {"code": "UNCODED-002", "name": "PVC PIPE SCRAP GREY", "cat": "Scrap", "pack": 25, "opening": 12966.17, "avg": 9000.0}, {"code": "RM022", "name": "LLDPE (ROTO)", "cat": "Additive", "pack": 25, "opening": 50375.0, "avg": 3325.0}, {"code": "RM024", "name": "HD-BLOW FB 1460", "cat": "HDPE", "pack": 25, "opening": 665525.0, "avg": 460000.0}, {"code": "RM027", "name": "M/B WHITE - HDPE", "cat": "HDPE", "pack": 25, "opening": 7875.0, "avg": 2800.0}, {"code": "RM028", "name": "M/B. BLUE - HDPE", "cat": "HDPE", "pack": 25, "opening": 1925.0, "avg": 400.0}, {"code": "RM032", "name": "PE Town Scrap", "cat": "Scrap", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM034", "name": "ROTO SCRAP", "cat": "Scrap", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM041", "name": "PP COPO INJECTION (BA212E)", "cat": "Additive", "pack": 25, "opening": 161425.0, "avg": 30000.0}, {"code": "UNCODED-003", "name": "LLDPE (ROTO) POWDER", "cat": "Additive", "pack": 25, "opening": 0.0, "avg": 518.75}, {"code": "RM044", "name": "POM KEPITAL-F20-03 FITTING", "cat": "Additive", "pack": 25, "opening": 32475.0, "avg": 5000.0}, {"code": "RM045", "name": "HDPE FITTING SCRAP BLUE", "cat": "Scrap", "pack": 25, "opening": 176.0, "avg": 3000.0}, {"code": "RM046", "name": "GRIP RING SCRAP", "cat": "Scrap", "pack": 25, "opening": 4224.0, "avg": 700.0}, {"code": "RM047", "name": "HDPE FITTING BODY SCRAP", "cat": "Scrap", "pack": 25, "opening": 744.0, "avg": 3200.0}, {"code": "RM049", "name": "BRACKET & PIPE CLIP SCRAP", "cat": "Scrap", "pack": 25, "opening": 13978.0, "avg": 3300.0}, {"code": "RM053", "name": "Stabiliser YQ-102 (NX-305)", "cat": "Additive", "pack": 25, "opening": 5025.0, "avg": 1681.25}, {"code": "RM108", "name": "Processing Aid CPE (135A)", "cat": "Additive", "pack": 25, "opening": 23800.0, "avg": 18.75}, {"code": "RM055", "name": "Foaming adjust ACR 401", "cat": "Additive", "pack": 25, "opening": 6075.0, "avg": 6.25}, {"code": "RM057", "name": "Foaming adjust K400 (ZB-750)", "cat": "Additive", "pack": 25, "opening": 25325.0, "avg": 6825.0}, {"code": "RM058", "name": "Foaming agent AC (MSV-206)", "cat": "Additive", "pack": 25, "opening": 1725.0, "avg": 406.25}, {"code": "RM059", "name": "Foaming agent NC (MS-107)", "cat": "Additive", "pack": 25, "opening": 1500.0, "avg": 437.5}, {"code": "RM060", "name": "EXT. Lubricant PE WAX (PR-700)", "cat": "Additive", "pack": 25, "opening": 1075.0, "avg": 337.5}, {"code": "RM061", "name": "INT. Lubricant G60", "cat": "Additive", "pack": 25, "opening": 1975.0, "avg": 0.0}, {"code": "RM062", "name": "Lubricant 3316F (OA6)", "cat": "Additive", "pack": 25, "opening": 1225.0, "avg": 168.75}, {"code": "RM065", "name": "SPC Scrap", "cat": "Scrap", "pack": 25, "opening": 6640.0, "avg": 0.0}, {"code": "RM016", "name": "Epoxy Oil ( 200 ltr Drum)", "cat": "Additive", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM069", "name": "Foam Board Scrap (BLACK)", "cat": "Scrap", "pack": 25, "opening": 1343.0, "avg": 0.0}, {"code": "RM070", "name": "Foam Board Scrap (WHITE)", "cat": "Scrap", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM015", "name": "Pvc Stabilizer", "cat": "PVC", "pack": 25, "opening": 8950.0, "avg": 5000.0}, {"code": "RM043", "name": "RECYCLE PP INJECTION", "cat": "Additive", "pack": 25, "opening": 10775.0, "avg": 22000.0}, {"code": "RM048", "name": "MASTER GREY CLIP 04011", "cat": "Color", "pack": 25, "opening": 400.0, "avg": 100.0}, {"code": "RM050", "name": "PP-R SCRAP PIPE & FITTING", "cat": "Scrap", "pack": 25, "opening": 14524.14, "avg": 5000.0}, {"code": "RM051", "name": "Impact modifier (ACM 40)", "cat": "Additive", "pack": 25, "opening": 1700.0, "avg": 0.0}, {"code": "RM052", "name": "Impact modifier (ACM 50)", "cat": "Additive", "pack": 25, "opening": 1975.0, "avg": 0.0}, {"code": "RM056", "name": "Foaming adjust NCR 61", "cat": "Additive", "pack": 25, "opening": 6200.0, "avg": 400.0}, {"code": "RM063", "name": "Lubricant LH 703", "cat": "Additive", "pack": 25, "opening": 825.0, "avg": 0.0}, {"code": "RM064", "name": "Wood Powder", "cat": "Additive", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM066", "name": "WPC Scrap", "cat": "Scrap", "pack": 25, "opening": 185.0, "avg": 0.0}, {"code": "RM068", "name": "Profile scrap clip", "cat": "Scrap", "pack": 25, "opening": 13995.6, "avg": 3000.0}, {"code": "RM071", "name": "Foam Board Scrap (GREY)", "cat": "Scrap", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM072", "name": "Wear layer", "cat": "Additive", "pack": 25, "opening": 57.0, "avg": 0.0}, {"code": "RM073", "name": "UV Undercoat", "cat": "Additive", "pack": 25, "opening": 280.0, "avg": 0.0}, {"code": "RM074", "name": "UV coating", "cat": "Additive", "pack": 25, "opening": 440.0, "avg": 0.0}, {"code": "RM075", "name": "PVC Film (1000 mm) - Mogany", "cat": "PVC", "pack": 25, "opening": 9.0, "avg": 0.0}, {"code": "RM076", "name": "PVC Film (1000 mm) - Light Grey", "cat": "PVC", "pack": 25, "opening": 7.0, "avg": 0.0}, {"code": "RM077", "name": "PVC film (1000 mm) - Dark Oak", "cat": "PVC", "pack": 25, "opening": 5.0, "avg": 0.0}, {"code": "RM078", "name": "PVC Film (1000 mm) - Oak", "cat": "PVC", "pack": 25, "opening": 2.0, "avg": 0.0}, {"code": "UNCODED-004", "name": "PVC FILM FRENCH OAK", "cat": "PVC", "pack": 25, "opening": 3.0, "avg": 0.0}, {"code": "UNCODED-005", "name": "PVC FILM WALNUT", "cat": "PVC", "pack": 25, "opening": 7.0, "avg": 0.0}, {"code": "UNCODED-006", "name": "PVC FILM WENGE", "cat": "PVC", "pack": 25, "opening": 2.0, "avg": 0.0}, {"code": "RM079", "name": "Hot Stamping Film - Mohgany", "cat": "Additive", "pack": 25, "opening": 1.0, "avg": 0.0}, {"code": "RM080", "name": "Hot Stamping Film - White Grain Oak", "cat": "Additive", "pack": 25, "opening": 0.0, "avg": 0.0}, {"code": "RM081", "name": "Hot Stamping Film - Dark Wengy", "cat": "Additive", "pack": 25, "opening": 3.0, "avg": 0.0}, {"code": "RM082", "name": "Hot Stamping Film - Wengy", "cat": "Additive", "pack": 25, "opening": 6.0, "avg": 0.0}, {"code": "RM083", "name": "Hot Stamping Film - Brown", "cat": "Additive", "pack": 25, "opening": 6.0, "avg": 0.0}, {"code": "RM084", "name": "Hot Stamping Film - Dark Brown Marble", "cat": "Additive", "pack": 25, "opening": 4.0, "avg": 0.0}, {"code": "RM085", "name": "Hot Stamping Film - Light Brown Marble", "cat": "Additive", "pack": 25, "opening": 4.0, "avg": 0.0}, {"code": "RM086", "name": "Hot Stamping Film - White Marble", "cat": "Additive", "pack": 25, "opening": 1.0, "avg": 0.0}, {"code": "RM087", "name": "Hot Stamping Film - Marble", "cat": "Additive", "pack": 25, "opening": 2.0, "avg": 0.0}, {"code": "RM092", "name": "FACIA BOARD SCRAP", "cat": "Scrap", "pack": 25, "opening": 8689.5, "avg": 15865.0}, {"code": "UNCODED-007", "name": "FACIA BOARD KAVER ROLL", "cat": "Additive", "pack": 25, "opening": 14.0, "avg": 12.25}, {"code": "3350", "name": "DOOR HINGES", "cat": "Additive", "pack": 25, "opening": 10000.0, "avg": 987.5}, {"code": "SF703", "name": "RUBBER WASHERS 20 MM", "cat": "Additive", "pack": 25, "opening": 218717.0, "avg": 170000.0}, {"code": "SF704", "name": "RUBBER WASHERS 25 MM", "cat": "Additive", "pack": 25, "opening": 951251.0, "avg": 90000.0}, {"code": "SF705", "name": "RUBBER WASHERS 32 MM", "cat": "Additive", "pack": 25, "opening": 1805802.0, "avg": 86250.0}, {"code": "SF706", "name": "RUBBER WASHERS 40 MM", "cat": "Additive", "pack": 25, "opening": 590974.0, "avg": 40000.0}, {"code": "SF707", "name": "RUBBER WASHERS 50 MM", "cat": "Additive", "pack": 25, "opening": 327340.0, "avg": 22000.0}, {"code": "SF708", "name": "RUBBER WASHERS 63 MM", "cat": "Additive", "pack": 25, "opening": 164120.0, "avg": 20000.0}, {"code": "SF709", "name": "RUBBER WASHERS 75 MM", "cat": "Additive", "pack": 25, "opening": 12000.0, "avg": 1000.0}, {"code": "SF710", "name": "RUBBER WASHERS 90 MM", "cat": "Additive", "pack": 25, "opening": 2103.0, "avg": 3000.0}, {"code": "SF711", "name": "RUBBER WASHERS 110 MM", "cat": "Additive", "pack": 25, "opening": 10000.0, "avg": 700.0}, {"code": "SF900", "name": "FEMALE INSERT 1/2\"", "cat": "Additive", "pack": 25, "opening": 349200.0, "avg": 45000.0}, {"code": "SF901", "name": "FEMALE INSERT 3/4\"", "cat": "Additive", "pack": 25, "opening": 14946.0, "avg": 0.0}, {"code": "SF902", "name": "MALE INSERT 1/2\"", "cat": "Additive", "pack": 25, "opening": 1964.0, "avg": 8000.0}, {"code": "SF903", "name": "MALE INSERT 3/4\"", "cat": "Additive", "pack": 25, "opening": 9806.0, "avg": 2000.0}, {"code": "SF904", "name": "GATE VALVE 1/2\"", "cat": "Additive", "pack": 25, "opening": 32815.0, "avg": 7200.0}, {"code": "SF905", "name": "GATE VALVE 3/4 \"", "cat": "Additive", "pack": 25, "opening": 21480.0, "avg": 2500.0}, {"code": "SF120", "name": "110 MM O-RING", "cat": "Additive", "pack": 25, "opening": 231000.0, "avg": 30000.0}, {"code": "SF907", "name": "FEMALE INSERT 1\"", "cat": "Additive", "pack": 25, "opening": 24861.0, "avg": 3000.0}, {"code": "SF908", "name": "MALE INSERT 1\"", "cat": "Additive", "pack": 25, "opening": 26315.0, "avg": 0.0}, {"code": "UNCODED-008", "name": "SMALL FITTING BAGS", "cat": "Additive", "pack": 25, "opening": 26000.0, "avg": 10000.0}, {"code": "UNCODED-009", "name": "BIG FITTING BAGS", "cat": "Additive", "pack": 25, "opening": 17000.0, "avg": 10000.0}, {"code": "UNCODED-010", "name": "TILES BOX", "cat": "Additive", "pack": 25, "opening": 2376.0, "avg": 0.0}, {"code": "UNCODED-011", "name": "THREAD SEAL TAPE (BOX)", "cat": "Additive", "pack": 25, "opening": 166.0, "avg": 112.5}, {"code": "RM095", "name": "PP FILLER", "cat": "PVC", "pack": 25, "opening": 39000.0, "avg": 5225.0}, {"code": "UNCODED-012", "name": "1 1/2 INCH ACCESS CAP RUBBER", "cat": "Additive", "pack": 25, "opening": 173400.0, "avg": 10600.0}, {"code": "UNCODED-013", "name": "2 INCH ACCESS CAP RUBBER", "cat": "Additive", "pack": 25, "opening": 22150.0, "avg": 6900.0}, {"code": "RM098", "name": "POLYCOM - H1 PVC", "cat": "PVC", "pack": 20, "opening": 0.0, "avg": 0.0}, {"code": "UNCODED-014", "name": "R200P BIG FITTING PP", "cat": "Additive", "pack": 25, "opening": 0.0, "avg": 11875.0}, {"code": "UNCODED-015", "name": "INJECTION (MUKWANO)", "cat": "Additive", "pack": 25, "opening": 53415.0, "avg": 18725.0}, {"code": "UNCODED-016", "name": "RUBBER PPR UNION 25 MM", "cat": "PPR", "pack": 25, "opening": 67200.0, "avg": 400.0}, {"code": "UNCODED-017", "name": "RUBBER PPR UNION 32 MM", "cat": "PPR", "pack": 25, "opening": 79560.0, "avg": 4060.0}, {"code": "RM030", "name": "HDPE YELLOW MASTER", "cat": "HDPE", "pack": 25, "opening": 1500.0, "avg": 31.25}, {"code": "RM107", "name": "TPV (PPR FITTING)", "cat": "PPR", "pack": 25, "opening": 1975.0, "avg": 0.0}, {"code": "UNCODED-018", "name": "3/4 O-RING FOR PPR VALVE", "cat": "PPR", "pack": 25, "opening": 19950.0, "avg": 0.0}, {"code": "UNCODED-019", "name": "CPE PLOYCOM -1M1", "cat": "Additive", "pack": 25, "opening": 2300.0, "avg": 18.75}],
-  tx:[],
-  onway:[],
-  production:[],
-  scrap:[],
-  silo:[],
-  logs:[]
+materials:[
+{code:"RM001",name:"PVC RESIN K67",cat:"PVC",pack:25,opening:1218875,avg:300000},
+{code:"RM002",name:"FILLER CACO3 (Coated)",cat:"PVC",pack:25,opening:150300,avg:60000},
+{code:"RM003",name:"PVC STABILIZER PIPE",cat:"PVC",pack:25,opening:13380,avg:4500},
+{code:"RM004",name:"TITANIUM DIOXIDE",cat:"PVC",pack:25,opening:18000,avg:3000},
+{code:"RM019",name:"3490 / WHITE / PE 100",cat:"HDPE",pack:25,opening:50000,avg:18000},
+{code:"RM020",name:"PE 80 / 3310",cat:"HDPE",pack:25,opening:30000,avg:9000},
+{code:"RM023",name:"Widespec",cat:"HDPE",pack:25,opening:42000,avg:12000},
+{code:"RM024",name:"PRIME / BLOW",cat:"HDPE",pack:25,opening:35000,avg:11000},
+{code:"RM026",name:"M/B BLACK",cat:"Color",pack:25,opening:4000,avg:500},
+{code:"RM027",name:"M/B WHITE",cat:"Color",pack:25,opening:4000,avg:500},
+{code:"RM033",name:"SCRAP",cat:"Scrap",pack:25,opening:10000,avg:3000},
+{code:"RM999",name:"Polycom-F",cat:"Additive",pack:20,opening:6000,avg:1000}
+],
+tx:[],onway:[],production:[],scrap:[],silo:[],logs:[],requests:[],
+recipes:[
+{name:"HDPE Tank 25kg Bag Mix",item:"TANKS",lines:[{code:"RM026",kg:0.2},{code:"RM027",kg:0.6},{code:"RM024",kg:135},{code:"RM020",kg:40},{code:"RM019",kg:35},{code:"RM033",kg:89.87}]},
+{name:"PVC Pipe Grey",item:"PIPE",lines:[{code:"RM001",kg:100},{code:"RM002",kg:50},{code:"RM003",kg:5}]},
+{name:"HDPE Pipe Mix",item:"PIPE",lines:[{code:"RM019",kg:100},{code:"RM026",kg:0.5}]}
+],
+recipeDraft:[]
 };
+let db = JSON.parse(localStorage.getItem("gentexOneViewV13") || "null") || seed;
+let currentUser = JSON.parse(localStorage.getItem("gentexOneViewUserV13") || "null");
+const qs=id=>document.getElementById(id);
+function save(){localStorage.setItem("gentexOneViewV13",JSON.stringify(db));}
+function nowStamp(){return new Date().toLocaleString();}
+function logAction(action,details){db.logs.unshift({time:nowStamp(),user:currentUser?currentUser.name:"System",role:currentUser?currentUser.role:"SYSTEM",action,details});db.logs=db.logs.slice(0,500);}
+function resetAll(){if(confirm("Reset all demo data?")){db=JSON.parse(JSON.stringify(seed));save();location.reload();}}
+function initLogin(){qs("loginUser").innerHTML=users.map((u,i)=>`<option value="${i}">${u.name} - ${u.role}</option>`).join("");if(currentUser)openApp();}
+function login(){const u=users[+qs("loginUser").value];if(qs("loginPass").value!==u.pass){alert("Wrong password. Demo password is 1234.");return;}currentUser=u;localStorage.setItem("gentexOneViewUserV13",JSON.stringify(u));openApp();}
+function logout(){localStorage.removeItem("gentexOneViewUserV13");currentUser=null;location.reload();}
+function roleLabel(r){return {ADMIN:"Admin",STORE:"Store Supervisor",BOSS:"Boss Read Only",TANK:"Tank Supervisor",PIPE_SUP:"Pipe Supervisor",FITTING_SUP:"Fitting Supervisor"}[r]||r;}
+function openApp(){qs("loginScreen").classList.add("hidden");qs("appScreen").classList.remove("hidden");qs("currentUserLabel").textContent=currentUser.name;qs("currentRoleLabel").textContent=roleLabel(currentUser.role);buildMenu();renderAll();showSection(menuByRole[currentUser.role][0]);}
+function buildMenu(){const list=menuByRole[currentUser.role];qs("sideNav").innerHTML=list.map((id,i)=>`<button class="${i===0?'active':''}" onclick="showSection('${id}')">${menuNames[id]}</button>`).join("");qs("mobileNav").innerHTML=list.map(id=>`<option value="${id}">${menuNames[id]}</option>`).join("");}
+function showSection(id){document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));qs(id).classList.add("active");document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));[...document.querySelectorAll("nav button")].find(b=>b.textContent===menuNames[id])?.classList.add("active");qs("mobileNav").value=id;renderAll();}
+function table(el,headers,rows){if(!qs(el))return;qs(el).innerHTML=`<thead><tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody>`;}
+function getMat(code){return db.materials.find(m=>m.code===code);}
+function materialOptions(){const opts=db.materials.map(m=>`<option value="${m.code}">${m.code} - ${m.name}</option>`).join("");["inMaterial","outMaterial","owMaterial","recipeMat"].forEach(id=>{if(qs(id))qs(id).innerHTML=opts;});}
+function itemOptions(){const opts=items.map(i=>`<option>${i}</option>`).join("");["outItem","pItem","sItem","recipeItem","reqItem"].forEach(id=>{if(qs(id))qs(id).innerHTML=opts;});}
+function deptOptions(){const opts=departments.map(i=>`<option>${i}</option>`).join("");["inDept","outDept"].forEach(id=>{if(qs(id))qs(id).innerHTML=opts;});}
+function recipeOptions(){if(qs("reqRecipe"))filterRecipesForRequest(); if(qs("mixType"))qs("mixType").innerHTML=db.recipes.map(r=>`<option>${r.name}</option>`).join("");}
+function openOnWay(code){return db.onway.filter(o=>o.code===code&&o.status!=="Received").reduce((a,b)=>a+Number(b.qty||0),0);}
+function stockOf(code){const m=getMat(code);const ins=db.tx.filter(t=>t.code===code&&t.type==="IN").reduce((a,b)=>a+Number(b.qty||0),0);const outs=db.tx.filter(t=>t.code===code&&t.type==="OUT").reduce((a,b)=>a+Number(b.qty||0),0);return Number(m?.opening||0)+ins-outs;}
+function coverMonths(m){return Number(m.avg)>0?(stockOf(m.code)+openOnWay(m.code))/Number(m.avg):999;}
+function status(m){const c=coverMonths(m);if(c<4)return["ORDER NOW","danger"];if(c<=5)return["WATCH","warn"];return["OK","ok"];}
+function addMaterial(){const code=qs("mCode").value.trim(),name=qs("mName").value.trim();if(!code||!name){alert("Enter material code and name.");return;}db.materials.push({code,name,cat:qs("mCat").value,pack:+qs("mPack").value||25,opening:+qs("mOpening").value||0,avg:+qs("mAvg").value||0});logAction("MATERIAL ADDED",`${code} - ${name}`);save();renderAll();alert("Material added.");}
+function addStock(type){const p=type==="IN"?"in":"out";const code=qs(p+"Material").value;const m=getMat(code);const bags=+qs(p+"Bags").value||0;const pack=+qs(p+"Pack").value||m.pack||25;const qty=+qs(p+"Qty").value||bags*pack;const row={type,code,date:qs(p+"Date").value||today,bags,pack,qty};if(type==="IN"){row.department=qs("inDept").value;row.supplier=qs("inSupplier").value;row.doc=qs("inDoc").value;row.remarks=qs("inRemarks").value;}else{row.item=qs("outItem").value;row.department=qs("outDept").value;row.remarks=qs("outRemarks").value;}db.tx.push(row);logAction(type==="IN"?"MATERIAL IN":"MATERIAL OUT",`${code} | ${qty} kg | ${row.department||row.item||""}`);save();renderAll();alert(type==="IN"?"Material In saved.":"Material Out saved.");}
+function addOnWay(){db.onway.push({date:qs("owDate").value||today,code:qs("owMaterial").value,qty:+qs("owQty").value||0,supplier:qs("owSupplier").value,arrival:qs("owArrival").value,status:qs("owStatus").value});logAction("ON THE WAY ORDER",`${qs("owMaterial").value} | ${qs("owQty").value} kg`);save();renderAll();alert("Order saved.");}
 
-let db = JSON.parse(localStorage.getItem("gentexOneViewV11") || "null") || seed;
-if(!db.schemaVersion || db.schemaVersion !== seed.schemaVersion){
-  const oldTx = db.tx || [];
-  const oldOnway = db.onway || [];
-  const oldProduction = db.production || [];
-  const oldScrap = db.scrap || [];
-  const oldSilo = db.silo || [];
-  const oldRecipes = db.recipes || seed.recipes || [];
-  db = JSON.parse(JSON.stringify(seed));
-  db.tx = oldTx;
-  db.onway = oldOnway;
-  db.production = oldProduction;
-  db.scrap = oldScrap;
-  db.silo = oldSilo;
-  db.recipes = oldRecipes;
-  save();
-}
-let currentUser = JSON.parse(localStorage.getItem("gentexOneViewUser") || "null");
+function addRecipeLine(){const name=qs("recipeName").value.trim();const item=qs("recipeItem").value;const code=qs("recipeMat").value;const kg=+qs("recipeKg").value||0;if(!name||!code||kg<=0){alert("Enter mix name, code and kg.");return;}db.recipeDraft.push({name,item,code,kg});qs("recipeKg").value=0;logAction("MIX DRAFT LINE",`${name} | ${code} | ${kg} kg`);save();renderAll();}
+function clearRecipeDraft(){db.recipeDraft=[];save();renderAll();}
+function saveRecipe(){if(!db.recipeDraft.length){alert("Add at least one material.");return;}const name=db.recipeDraft[0].name;const item=db.recipeDraft[0].item;const lines=db.recipeDraft.map(x=>({code:x.code,kg:x.kg}));const ex=db.recipes.find(r=>r.name.toLowerCase()===name.toLowerCase());if(ex){ex.item=item;ex.lines=lines;}else db.recipes.push({name,item,lines});db.recipeDraft=[];logAction("MIX RECIPE SAVED",name);save();renderAll();alert("Mix recipe saved.");}
+function deleteRecipe(name){if(!confirm("Delete recipe?"))return;db.recipes=db.recipes.filter(r=>r.name!==name);logAction("MIX RECIPE DELETED",name);save();renderAll();}
+function calcLines(recipeName,count,prev){const recipe=db.recipes.find(r=>r.name===recipeName);if(!recipe)return [];return recipe.lines.map((line,i)=>{const m=getMat(line.code)||{name:"Unknown",pack:25};const total=Number(line.kg||0)*count;const deduction=i===0?prev:0;const net=Math.max(total-deduction,0);const pack=Number(m.pack||25);return {code:line.code,name:m.name,required:total,deduction,net,pack,bags:net/pack};});}
+function filterRecipesForRequest(){const item=qs("reqItem")?qs("reqItem").value:"";const list=db.recipes.filter(r=>!item||r.item===item);if(qs("reqRecipe"))qs("reqRecipe").innerHTML=(list.length?list:db.recipes).map(r=>`<option>${r.name}</option>`).join("");}
+function previewRequest(){const recipe=qs("reqRecipe").value;const count=+qs("reqMixCount").value||1;const prev=+qs("reqPrev").value||0;const rows=calcLines(recipe,count,prev);qs("reqMeta").textContent=`${recipe} | Mixes: ${count} | Previous Balance: ${prev} kg | Generated: ${nowStamp()}`;table("reqPreviewTable",["Code","Material","Required Kg","Prev Bal","Net Kg","Bag Kg","Bags"],rows.map(r=>[r.code,r.name,r.required.toFixed(3),r.deduction.toFixed(3),r.net.toFixed(3),r.pack,r.bags.toFixed(3)]));return rows;}
+function submitRequest(){const rows=previewRequest();if(!rows.length){alert("No recipe selected.");return;}const req={id:"REQ-"+Date.now(),time:nowStamp(),date:qs("reqDate").value||today,user:currentUser.name,role:currentUser.role,item:qs("reqItem").value,recipe:qs("reqRecipe").value,mixes:+qs("reqMixCount").value||1,prev:+qs("reqPrev").value||0,remarks:qs("reqRemarks").value,status:"Pending",lines:rows};db.requests.unshift(req);logAction("MATERIAL REQUEST SUBMITTED",`${req.id} | ${req.recipe} | ${req.mixes} mixes`);save();renderAll();alert("Material request submitted to Store/Admin.");}
+function approveRequest(id){const r=db.requests.find(x=>x.id===id);if(r){r.status="Approved";r.approvedBy=currentUser.name;r.approvedTime=nowStamp();logAction("REQUEST APPROVED",id);save();renderAll();}}
+function completeRequest(id){const r=db.requests.find(x=>x.id===id);if(r){r.status="Issued";r.issuedBy=currentUser.name;r.issuedTime=nowStamp();logAction("REQUEST ISSUED",id);save();renderAll();}}
+function printRequestPreview(){const content=qs("requestPrintArea").innerHTML;const w=window.open("","","width=900,height=650");w.document.write(`<html><head><title>Material Request</title><style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style></head><body><h2>Gentex OneView - Material Request</h2>${content}</body></html>`);w.document.close();w.print();}
 
-const qs = id => document.getElementById(id);
-function save(){ localStorage.setItem("gentexOneViewV11",JSON.stringify(db)); }
-function resetAll(){ if(confirm("Reset all demo data?")){ db = JSON.parse(JSON.stringify(seed)); save(); location.reload(); } }
+function addProduction(){const variance=(+qs("pPrev").value + +qs("pNew").value - +qs("pUsed").value - +qs("pPresent").value);db.production.push({date:qs("pDate").value||today,shift:qs("pShift").value,item:qs("pItem").value,machine:qs("pMachine").value,operator:qs("pOperator").value,hours:+qs("pHours").value||0,prev:+qs("pPrev").value||0,newmix:+qs("pNew").value||0,used:+qs("pUsed").value||0,present:+qs("pPresent").value||0,product:qs("pProduct").value,qty:+qs("pQty").value||0,offcut:+qs("pOffcut").value||0,rejected:+qs("pRejected").value||0,fallen:+qs("pFallen").value||0,wastage:+qs("pWastage").value||0,checked:qs("pChecked").value,variance});logAction("PRODUCTION SAVED",`${qs("pItem").value} | ${qs("pMachine").value}`);save();renderAll();alert(Math.abs(variance)>0.01?`Saved. Variance ${variance.toFixed(2)} kg`:"Saved.");}
+function addScrap(){db.scrap.push({date:qs("sDate").value||today,item:qs("sItem").value,machine:qs("sMachine").value,type:qs("sType").value,qty:+qs("sQty").value||0,remarks:qs("sRemarks").value});logAction("SCRAP SAVED",`${qs("sItem").value} | ${qs("sQty").value} kg`);save();renderAll();alert("Scrap saved.");}
+function setSiloMat(){if(qs("sfMaterial"))qs("sfMaterial").value=siloMap[qs("sfSilo").value];}
+function addSiloFeed(){db.silo.push({date:qs("sfDate").value||today,shift:qs("sfShift").value,silo:qs("sfSilo").value,code:qs("sfMaterial").value,required:+qs("sfRequired").value||0,actual:+qs("sfActual").value||0});logAction("SILO FEED",`Silo ${qs("sfSilo").value} | ${qs("sfActual").value} kg`);save();renderAll();alert("Silo feed saved.");}
 
-
-function migrateV12(){
-  if(!db.logs) db.logs = [];
-  if(!db.recipes) db.recipes = [];
-  if(!db.recipeDraft) db.recipeDraft = [];
-  const tankRecipeName = "HDPE Tank 25kg Bag Mix";
-  if(!db.recipes.find(r=>r.name===tankRecipeName)){
-    db.recipes.push({
-      name:tankRecipeName,
-      lines:[
-        {code:"RM026",kg:0.2},
-        {code:"RM027",kg:0.6},
-        {code:"RM024",kg:135},
-        {code:"RM020",kg:40},
-        {code:"RM019",kg:35},
-        {code:"RM033",kg:89.87}
-      ]
-    });
-  }
-  const hdpeSimple = "HDPE Tank";
-  if(!db.recipes.find(r=>r.name===hdpeSimple)){
-    db.recipes.push({
-      name:hdpeSimple,
-      lines:[{code:"RM024",kg:80},{code:"RM019",kg:40},{code:"RM023",kg:25},{code:"RM020",kg:20}]
-    });
-  }
-  const pvcSimple = "PVC Pipe Grey";
-  if(!db.recipes.find(r=>r.name===pvcSimple)){
-    db.recipes.push({
-      name:pvcSimple,
-      lines:[{code:"RM001",kg:100},{code:"RM002",kg:50},{code:"RM003",kg:5}]
-    });
-  }
+function renderAll(){materialOptions();itemOptions();deptOptions();recipeOptions();["inDate","outDate","owDate","pDate","sDate","sfDate","reqDate"].forEach(id=>{if(qs(id)&&!qs(id).value)qs(id).value=today;});setSiloMat();if(qs("inMaterial")){const m=getMat(qs("inMaterial").value);if(m)qs("inPack").value=m.pack;}if(qs("outMaterial")){const m=getMat(qs("outMaterial").value);if(m)qs("outPack").value=m.pack;}
+const search=(qs("materialSearch")?.value||"").toLowerCase();const mats=db.materials.filter(m=>(m.code+" "+m.name+" "+m.cat).toLowerCase().includes(search));table("materialsTable",["Code","Material","Category","Pack Kg","Stock","On Way","Avg/M","Cover","Status"],mats.map(m=>[m.code,m.name,m.cat,m.pack,stockOf(m.code).toLocaleString(),openOnWay(m.code).toLocaleString(),Number(m.avg).toLocaleString(),coverMonths(m).toFixed(2),`<span class="tag ${status(m)[1]}">${status(m)[0]}</span>`]));
+table("purchaseTable",["Code","Material","Stock","On Way","Available","Avg/M","Cover","Action"],db.materials.map(m=>[m.code,m.name,stockOf(m.code).toLocaleString(),openOnWay(m.code).toLocaleString(),(stockOf(m.code)+openOnWay(m.code)).toLocaleString(),Number(m.avg).toLocaleString(),coverMonths(m).toFixed(2),`<span class="tag ${status(m)[1]}">${status(m)[0]}</span>`]));
+const critical=db.materials.filter(m=>coverMonths(m)<4).map(m=>[m.code,m.name,stockOf(m.code).toLocaleString(),coverMonths(m).toFixed(2),`<span class="tag danger">ORDER NOW</span>`]);table("criticalTable",["Code","Material","Stock","Cover","Action"],critical.length?critical:[["-","No urgent material in demo","-","-","-"]]);
+table("recipeDraftTable",["Mix","Item","Code","Material","Kg/Mix"],db.recipeDraft.length?db.recipeDraft.map(x=>[x.name,x.item,x.code,getMat(x.code)?.name||"",x.kg]):[["-","No draft lines","-","-","-"]]);
+table("savedRecipesTable",["Mix Name","Item","Materials","Action"],db.recipes.map(r=>[r.name,r.item,r.lines.map(l=>`${l.code} ${getMat(l.code)?.name||""}: ${l.kg} kg`).join("<br>"),`<button class="btn-red" onclick="deleteRecipe('${r.name.replaceAll("'","\\'")}')">Delete</button>`]));
+table("requestTable",["ID","Time","User","Item","Recipe","Mixes","Status","Action"],db.requests.map(r=>[r.id,r.time,r.user,r.item,r.recipe,r.mixes,`<span class="tag ${r.status==="Pending"?"warn":r.status==="Issued"?"ok":"info"}">${r.status}</span>`,(currentUser.role==="ADMIN"||currentUser.role==="STORE")?`<button class="btn-blue" onclick="approveRequest('${r.id}')">Approve</button> <button class="btn" onclick="completeRequest('${r.id}')">Issued</button>`:"-"]));
+table("dashReqTable",["ID","User","Item","Recipe","Mixes","Status"],db.requests.filter(r=>r.status==="Pending").map(r=>[r.id,r.user,r.item,r.recipe,r.mixes,`<span class="tag warn">Pending</span>`]).slice(0,8));
+table("onWayTable",["Date","Material","Qty","Supplier","Expected","Status"],db.onway.map(o=>[o.date,o.code+" - "+(getMat(o.code)?.name||""),Number(o.qty).toLocaleString(),o.supplier||"",o.arrival||"",`<span class="tag info">${o.status}</span>`]));
+table("siloTable",["Date","Shift","Silo","Material","Required","Actual","Difference"],db.silo.map(s=>[s.date,s.shift,"Silo "+s.silo,s.code,Number(s.required).toLocaleString(),Number(s.actual).toLocaleString(),(Number(s.actual)-Number(s.required)).toLocaleString()]));
+table("activityTable",["Time","User","Role","Action","Details"],db.logs.map(l=>[l.time,l.user,l.role,l.action,l.details]));
+qs("kMaterials").textContent=db.materials.length;qs("kOrder").textContent=db.materials.filter(m=>coverMonths(m)<4).length;qs("kRequests").textContent=db.requests.filter(r=>r.status==="Pending").length;qs("kOnWay").textContent=db.onway.filter(o=>o.status!=="Received").reduce((a,b)=>a+Number(b.qty||0),0).toLocaleString()+" kg";
 }
-function nowStamp(){
-  const d = new Date();
-  return d.toLocaleString();
-}
-function logAction(action, details){
-  if(!db.logs) db.logs = [];
-  db.logs.unshift({
-    time: nowStamp(),
-    user: currentUser ? currentUser.name : "System",
-    role: currentUser ? currentUser.role : "SYSTEM",
-    action,
-    details
-  });
-  db.logs = db.logs.slice(0,500);
-}
-
-function initLogin(){
-  qs("loginUser").innerHTML = users.map((u,i)=>`<option value="${i}">${u.name} - ${u.role}</option>`).join("");
-  if(currentUser){ openApp(); }
-}
-function login(){
-  const u = users[+qs("loginUser").value];
-  if(qs("loginPass").value !== u.pass){ alert("Wrong password. Demo password is 1234."); return; }
-  currentUser = u;
-  localStorage.setItem("gentexOneViewUser",JSON.stringify(u));
-  openApp();
-}
-function logout(){ localStorage.removeItem("gentexOneViewUser"); currentUser=null; location.reload(); }
-function openApp(){
-  qs("loginScreen").classList.add("hidden"); qs("appScreen").classList.remove("hidden");
-  qs("currentUserLabel").textContent = currentUser.name;
-  qs("currentRoleLabel").textContent = roleLabel(currentUser.role);
-  buildMenu(); renderAll();
-  const first = menuByRole[currentUser.role][0]; showSection(first);
-}
-function roleLabel(r){
-  return {ADMIN:"Admin",STORE:"Store Supervisor",BOSS:"Boss Read Only",TANK:"Tank Supervisor",PIPE_SUP:"Pipe Supervisor",FITTING_SUP:"Fitting Supervisor"}[r]||r;
-}
-function buildMenu(){
-  const list = menuByRole[currentUser.role];
-  qs("sideNav").innerHTML = list.map((id,i)=>`<button class="${i===0?'active':''}" onclick="showSection('${id}')">${menuNames[id]}</button>`).join("");
-  qs("mobileNav").innerHTML = list.map(id=>`<option value="${id}">${menuNames[id]}</option>`).join("");
-}
-function showSection(id){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  qs(id).classList.add("active");
-  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-  [...document.querySelectorAll("nav button")].find(b=>b.textContent===menuNames[id])?.classList.add("active");
-  qs("mobileNav").value = id;
-  renderAll();
-}
-
-function table(el, headers, rows){
-  qs(el).innerHTML = `<thead><tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody>`;
-}
-function materialOptions(){
-  const opts = db.materials.map(m=>`<option value="${m.code}">${m.code} - ${m.name}</option>`).join("");
-  ["inMaterial","outMaterial","owMaterial"].forEach(id=>{ if(qs(id)) qs(id).innerHTML=opts; });
-}
-function itemOptions(){
-  const opts = items.map(i=>`<option>${i}</option>`).join("");
-  ["outItem","pItem","sItem","inDept","outDept"].forEach(id=>{ if(qs(id)) qs(id).innerHTML=opts; });
-}
-function openOnWay(code){
-  return db.onway.filter(o=>o.code===code && o.status!=="Received").reduce((a,b)=>a+Number(b.qty||0),0);
-}
-function stockOf(code){
-  const m = db.materials.find(x=>x.code===code);
-  const ins = db.tx.filter(t=>t.code===code && t.type==="IN").reduce((a,b)=>a+Number(b.qty||0),0);
-  const outs = db.tx.filter(t=>t.code===code && t.type==="OUT").reduce((a,b)=>a+Number(b.qty||0),0);
-  return Number(m?.opening||0)+ins-outs;
-}
-function coverMonths(m){ return Number(m.avg)>0 ? (stockOf(m.code)+openOnWay(m.code))/Number(m.avg) : 999; }
-function status(m){
-  const c = coverMonths(m);
-  if(c < 4) return ["ORDER NOW","danger"];
-  if(c <= 5) return ["WATCH","warn"];
-  return ["OK","ok"];
-}
-function addMaterial(){
-  const code=qs("mCode").value.trim(), name=qs("mName").value.trim();
-  if(!code || !name){ alert("Enter material code and name."); return; }
-  db.materials.push({code,name,cat:qs("mCat").value,pack:+qs("mPack").value||25,opening:+qs("mOpening").value||0,avg:+qs("mAvg").value||0});
-  logAction("MATERIAL ADDED", `${code} - ${name}`);
-  save(); renderAll(); alert("Material added.");
-}
-function getMat(code){ return db.materials.find(m=>m.code===code); }
-function addStock(type){
-  const prefix = type==="IN" ? "in" : "out";
-  const code = qs(prefix+"Material").value;
-  const m = getMat(code);
-  const bags = +qs(prefix+"Bags").value || 0;
-  const pack = +qs(prefix+"Pack").value || m.pack || 25;
-  const qty = +qs(prefix+"Qty").value || bags*pack;
-  const row = {type,code,date:qs(prefix+"Date").value||today,bags,pack,qty};
-  if(type==="IN"){
-    row.dept=qs("inDept").value; row.supplier=qs("inSupplier").value; row.doc=qs("inDoc").value; row.remarks=qs("inRemarks").value;
-  } else {
-    row.item=qs("outItem").value; row.dept=qs("outDept").value; row.remarks=qs("outRemarks").value;
-  }
-  db.tx.push(row); logAction(type==="IN"?"MATERIAL IN":"MATERIAL OUT", `${code} | ${qty} kg`); save(); renderAll(); alert(type==="IN"?"Material In saved.":"Material Out saved.");
-}
-function addOnWay(){
-  db.onway.push({date:qs("owDate").value||today,code:qs("owMaterial").value,qty:+qs("owQty").value||0,supplier:qs("owSupplier").value,arrival:qs("owArrival").value,status:qs("owStatus").value});
-  logAction("ON THE WAY ORDER SAVED", `${qs("owMaterial").value} | ${qs("owQty").value} kg`);
-  save(); renderAll(); alert("On-the-way order saved.");
-}
-function calcMix(){
-  const n = +qs("mixCount").value || 1, prev = +qs("mixPrev").value || 0;
-  let recipe=[
-    ["RM001","PVC Resin",100,25],
-    ["RM002","Filler",50,25],
-    ["RM003","Stabilizer",5,25],
-    ["RM999","Polycom-F",20,20]
-  ];
-  const type = qs("mixType").value;
-  if(type.includes("HDPE")) recipe=[["RM024","RM024",80,25],["RM019","RM019",40,25],["RM023","Widespec",25,25],["RM020","3310",20,25]];
-  if(type==="WPC") recipe=[["RM001","PVC Resin",70,25],["RM002","Filler",70,25],["RM999","Polycom-F",20,20]];
-  const rows = recipe.map((r,i)=>{
-    const total = r[2]*n, deduction = i===0?prev:0, net = Math.max(total-deduction,0), bags = net/r[3];
-    return [r[0],r[1],total.toFixed(2),deduction.toFixed(2),net.toFixed(2),r[3],bags.toFixed(2)];
-  });
-  qs("slipMeta").textContent = `${type} | Mixes: ${n} | Previous balance deducted from first material: ${prev} kg`;
-  table("mixResult",["Code","Material","Required Kg","Prev Bal","Net Kg","Bag Kg","Bags"],rows);
-}
-
-function recipeOptions(){
-  ensureRecipeFields();
-  if(qs("recipeMat")) qs("recipeMat").innerHTML = db.materials.map(m=>`<option value="${m.code}">${m.code} - ${m.name}</option>`).join("");
-  if(qs("mixType")) qs("mixType").innerHTML = db.recipes.map(r=>`<option>${r.name}</option>`).join("");
-}
-function addRecipeLine(){
-  ensureRecipeFields();
-  const name = qs("recipeName").value.trim();
-  const code = qs("recipeMat").value;
-  const kg = +qs("recipeKg").value || 0;
-  if(!name || !code || kg<=0){ alert("Enter mix name, raw material code and kg per mix."); return; }
-  db.recipeDraft.push({name,code,kg});
-  qs("recipeKg").value = 0;
-  logAction("MIX DRAFT LINE ADDED", `${name} | ${code} | ${kg} kg`);
-  save(); renderAll();
-}
-function clearRecipeDraft(){
-  db.recipeDraft = [];
-  logAction("MIX DRAFT CLEARED", "Draft cleared");
-  save(); renderAll();
-}
-function saveRecipe(){
-  ensureRecipeFields();
-  if(!db.recipeDraft.length){ alert("Add at least one material to the mix draft."); return; }
-  const name = db.recipeDraft[0].name;
-  const lines = db.recipeDraft.map(x=>({code:x.code,kg:x.kg}));
-  const existing = db.recipes.find(r=>r.name.toLowerCase()===name.toLowerCase());
-  if(existing) existing.lines = lines;
-  else db.recipes.push({name,lines});
-  db.recipeDraft = [];
-  logAction("MIX RECIPE SAVED", name);
-  save(); renderAll();
-  if(qs("mixType")) qs("mixType").value = name;
-  alert("Mix recipe saved.");
-}
-function deleteRecipe(name){
-  if(!confirm("Delete this mix recipe?")) return;
-  db.recipes = db.recipes.filter(r=>r.name!==name);
-  logAction("MIX RECIPE DELETED", name);
-  save(); renderAll();
-}
-function calcMix(){
-  ensureRecipeFields();
-  const recipe = db.recipes.find(r=>r.name===qs("mixType").value);
-  if(!recipe){ table("mixResult",["Info"],[["No saved mix recipe found."]]); return; }
-  const n = +qs("mixCount").value || 1;
-  const prev = +qs("mixPrev").value || 0;
-  const rows = recipe.lines.map((line,i)=>{
-    const m = getMat(line.code) || {name:"Unknown Material",pack:25};
-    const total = Number(line.kg||0) * n;
-    const deduction = i===0 ? prev : 0;
-    const net = Math.max(total - deduction, 0);
-    const pack = Number(m.pack||25);
-    const bags = net / pack;
-    return [line.code,m.name,total.toFixed(3),deduction.toFixed(3),net.toFixed(3),pack,bags.toFixed(3)];
-  });
-  qs("slipMeta").textContent = `${recipe.name} | Mixes/Bags: ${n} | Previous balance deducted from first material: ${prev} kg | Generated: ${nowStamp()}`;
-  table("mixResult",["Code","Material","Required Kg","Prev Bal","Net Kg","Bag Kg","Bags"],rows);
-  logAction("MIX CALCULATED", `${recipe.name} x ${n}`);
-}
-
-function printSlip(){
-  const content = qs("printArea").innerHTML;
-  const w = window.open("", "", "width=800,height=600");
-  w.document.write(`<html><head><title>Material Request Slip</title><style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style></head><body><h2>Gentex OneView - Material Request Slip</h2>${content}</body></html>`);
-  w.document.close(); w.print();
-}
-function addProduction(){
-  const variance = (+qs("pPrev").value + +qs("pNew").value - +qs("pUsed").value - +qs("pPresent").value);
-  db.production.push({
-    date:qs("pDate").value||today,shift:qs("pShift").value,item:qs("pItem").value,machine:qs("pMachine").value,
-    operator:qs("pOperator").value,hours:+qs("pHours").value||0,prev:+qs("pPrev").value||0,newmix:+qs("pNew").value||0,
-    used:+qs("pUsed").value||0,present:+qs("pPresent").value||0,product:qs("pProduct").value,qty:+qs("pQty").value||0,
-    good:+qs("pGood").value||0,offcut:+qs("pOffcut").value||0,rejected:+qs("pRejected").value||0,fallen:+qs("pFallen").value||0,
-    wastage:+qs("pWastage").value||0,checked:qs("pChecked").value,variance
-  });
-  logAction("PRODUCTION SAVED", `${qs("pItem").value} | ${qs("pMachine").value} | Qty ${qs("pQty").value}`);
-  save(); renderAll();
-  alert(Math.abs(variance)>0.01 ? `Production saved. Material variance: ${variance.toFixed(2)} kg` : "Production saved. Material balance OK.");
-}
-function addScrap(){
-  db.scrap.push({date:qs("sDate").value||today,item:qs("sItem").value,machine:qs("sMachine").value,type:qs("sType").value,qty:+qs("sQty").value||0,remarks:qs("sRemarks").value});
-  logAction("SCRAP SAVED", `${qs("sItem").value} | ${qs("sType").value} | ${qs("sQty").value} kg`);
-  save(); renderAll(); alert("Scrap saved.");
-}
-function setSiloMat(){ qs("sfMaterial").value = siloMap[qs("sfSilo").value]; }
-function addSiloFeed(){
-  db.silo.push({date:qs("sfDate").value||today,shift:qs("sfShift").value,silo:qs("sfSilo").value,code:qs("sfMaterial").value,required:+qs("sfRequired").value||0,actual:+qs("sfActual").value||0});
-  logAction("SILO FEED SAVED", `Silo ${qs("sfSilo").value} | ${qs("sfMaterial").value} | Actual ${qs("sfActual").value} kg`);
-  save(); renderAll(); alert("Silo feed saved.");
-}
-function monthFilter(row){ return (row.date||"").slice(0,7)===monthKey; }
-
-function renderAll(){
-  materialOptions(); itemOptions(); recipeOptions();
-  ["inDate","outDate","owDate","pDate","sDate","sfDate"].forEach(id=>{ if(qs(id) && !qs(id).value) qs(id).value=today; });
-  setSiloMat(); calcMix();
-  const inM=getMat(qs("inMaterial")?.value); if(inM) qs("inPack").value=inM.pack;
-  const outM=getMat(qs("outMaterial")?.value); if(outM) qs("outPack").value=outM.pack;
-
-  const search=(qs("materialSearch")?.value||"").toLowerCase();
-  const mats=db.materials.filter(m=>(m.code+" "+m.name+" "+m.cat).toLowerCase().includes(search));
-  table("materialsTable",["Code","Material","Category","Pack Kg","Current Stock","On Way","Avg Use/M","Cover Months","Status"],
-    mats.map(m=>[m.code,m.name,m.cat,m.pack,stockOf(m.code).toLocaleString(),openOnWay(m.code).toLocaleString(),Number(m.avg).toLocaleString(),coverMonths(m).toFixed(2),`<span class="tag ${status(m)[1]}">${status(m)[0]}</span>`]));
-
-  table("purchaseTable",["Code","Material","Current Stock","On Way","Available","Avg Use/M","Cover Months","Action"],
-    db.materials.map(m=>[m.code,m.name,stockOf(m.code).toLocaleString(),openOnWay(m.code).toLocaleString(),(stockOf(m.code)+openOnWay(m.code)).toLocaleString(),Number(m.avg).toLocaleString(),coverMonths(m).toFixed(2),`<span class="tag ${status(m)[1]}">${status(m)[0]}</span>`]));
-
-  const critical=db.materials.filter(m=>coverMonths(m)<4).map(m=>[m.code,m.name,stockOf(m.code).toLocaleString(),openOnWay(m.code).toLocaleString(),coverMonths(m).toFixed(2),`<span class="tag danger">ORDER NOW</span>`]);
-  table("criticalTable",["Code","Material","Stock","On Way","Cover","Action"],critical.length?critical:[["-","No urgent material in demo","-","-","-","-"]]);
-
-  const itemRows=items.map(i=>{
-    const qty=db.tx.filter(t=>t.type==="OUT" && t.item===i && monthFilter(t)).reduce((a,b)=>a+Number(b.qty||0),0);
-    return [i,qty.toLocaleString()+" kg"];
-  }).filter(r=>!r[1].startsWith("0 "));
-  table("itemConsumptionTable",["Item","Consumed This Month"],itemRows.length?itemRows:[["-","No material out this month"]]);
-
-  const prodToday=db.production.filter(p=>p.date===today).map(p=>[p.item,p.machine,p.product,p.qty,p.wastage,Math.abs(p.variance)>0.01?`<span class="tag warn">${p.variance.toFixed(2)} kg variance</span>`:`<span class="tag ok">OK</span>`]);
-  table("prodTodayTable",["Item","Machine","Product","Qty","Wastage","Balance"],prodToday.length?prodToday:[["-","No production entered today","-","-","-","-"]]);
-
-  const scrapRows=items.map(i=>{
-    const gen=db.scrap.filter(s=>s.item===i && s.type!=="Reused" && monthFilter(s)).reduce((a,b)=>a+Number(b.qty||0),0);
-    const reused=db.scrap.filter(s=>s.item===i && s.type==="Reused" && monthFilter(s)).reduce((a,b)=>a+Number(b.qty||0),0);
-    return [i,gen.toLocaleString()+" kg",reused.toLocaleString()+" kg"];
-  }).filter(r=>!r[1].startsWith("0 ") || !r[2].startsWith("0 "));
-  table("scrapMonthTable",["Item","Generated","Reused"],scrapRows.length?scrapRows:[["-","No scrap entries","-"]]);
-
-  table("onWayTable",["Date","Material","Qty","Supplier","Expected","Status"],db.onway.map(o=>[o.date,o.code+" - "+(getMat(o.code)?.name||""),Number(o.qty).toLocaleString(),o.supplier||"",o.arrival||"",`<span class="tag info">${o.status}</span>`]));
-  table("siloTable",["Date","Shift","Silo","Material","Required","Actual","Difference"],db.silo.map(s=>[s.date,s.shift,"Silo "+s.silo,s.code,Number(s.required).toLocaleString(),Number(s.actual).toLocaleString(),(Number(s.actual)-Number(s.required)).toLocaleString()]));
-  ensureRecipeFields();
-  if(qs("recipeDraftTable")) table("recipeDraftTable",["Mix Name","Code","Material","Kg Per Mix"], db.recipeDraft.length ? db.recipeDraft.map(x=>[x.name,x.code,getMat(x.code)?.name||"",x.kg]) : [["-","No draft lines","-","-"]]);
-  if(qs("savedRecipesTable")) table("savedRecipesTable",["Mix Name","Materials","Action"], db.recipes.map(r=>[
-    r.name,
-    r.lines.map(l=>`${l.code} ${getMat(l.code)?.name||""}: ${l.kg} kg`).join("<br>"),
-    `<button class="btn-red" onclick="deleteRecipe('${r.name.replaceAll("'","\\'")}')">Delete</button>`
-  ]));
-  if(qs("activityTable")) table("activityTable",["Time","User","Role","Action","Details"], (db.logs||[]).map(l=>[l.time,l.user,l.role,l.action,l.details]));
-
-
-  qs("kMaterials").textContent=db.materials.length;
-  qs("kOrder").textContent=db.materials.filter(m=>coverMonths(m)<4).length;
-  qs("kWatch").textContent=db.materials.filter(m=>coverMonths(m)>=4 && coverMonths(m)<=5).length;
-  qs("kOnWay").textContent=db.onway.filter(o=>o.status!=="Received").reduce((a,b)=>a+Number(b.qty||0),0).toLocaleString()+" kg";
-}
-document.addEventListener("change", e=>{
-  if(e.target.id==="inMaterial"){ const m=getMat(e.target.value); if(m) qs("inPack").value=m.pack; }
-  if(e.target.id==="outMaterial"){ const m=getMat(e.target.value); if(m) qs("outPack").value=m.pack; }
-  if(["inBags","inPack"].includes(e.target.id)) qs("inQty").value=(+qs("inBags").value*+qs("inPack").value).toFixed(2);
-  if(["outBags","outPack"].includes(e.target.id)) qs("outQty").value=(+qs("outBags").value*+qs("outPack").value).toFixed(2);
-});
-function download(filename, text, mime="text/plain"){
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([text],{type:mime}));
-  a.download=filename; a.click();
-}
-function downloadJSON(){ download("gentex_oneview_v1_1_backup.json", JSON.stringify(db,null,2), "application/json"); }
-function csvEscape(v){ return `"${String(v??"").replaceAll('"','""')}"`; }
-function exportCSV(type){
-  let rows=[];
-  if(type==="materials"){
-    rows=[["Code","Material","Category","PackKg","CurrentStock","OnWay","AvgUseMonth","CoverMonths","Status"]];
-    db.materials.forEach(m=>rows.push([m.code,m.name,m.cat,m.pack,stockOf(m.code),openOnWay(m.code),m.avg,coverMonths(m).toFixed(2),status(m)[0]]));
-  } else {
-    rows=[["Date","Type","Code","Material","Item","Department","Bags","Pack","Qty","Remarks"]];
-    db.tx.forEach(t=>rows.push([t.date,t.type,t.code,getMat(t.code)?.name||"",t.item||"",t.dept||"",t.bags,t.pack,t.qty,t.remarks||""]));
-  }
-  download(`gentex_${type}.csv`, rows.map(r=>r.map(csvEscape).join(",")).join("\n"), "text/csv");
-}
-migrateV12(); save(); initLogin();
+document.addEventListener("change",e=>{if(e.target.id==="inMaterial"){const m=getMat(e.target.value);if(m)qs("inPack").value=m.pack;}if(e.target.id==="outMaterial"){const m=getMat(e.target.value);if(m)qs("outPack").value=m.pack;}if(["inBags","inPack"].includes(e.target.id))qs("inQty").value=(+qs("inBags").value*+qs("inPack").value).toFixed(2);if(["outBags","outPack"].includes(e.target.id))qs("outQty").value=(+qs("outBags").value*+qs("outPack").value).toFixed(2);});
+function download(filename,text,mime="text/plain"){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:mime}));a.download=filename;a.click();}
+function downloadJSON(){download("gentex_oneview_v1_3_backup.json",JSON.stringify(db,null,2),"application/json");}
+function csvEscape(v){return `"${String(v??"").replaceAll('"','""')}"`;}
+function exportCSV(type){let rows=[];if(type==="materials"){rows=[["Code","Material","Category","PackKg","CurrentStock","OnWay","AvgUseMonth","CoverMonths","Status"]];db.materials.forEach(m=>rows.push([m.code,m.name,m.cat,m.pack,stockOf(m.code),openOnWay(m.code),m.avg,coverMonths(m).toFixed(2),status(m)[0]]));}else{rows=[["Date","Type","Code","Material","Item","Department","Bags","Pack","Qty","Remarks"]];db.tx.forEach(t=>rows.push([t.date,t.type,t.code,getMat(t.code)?.name||"",t.item||"",t.department||"",t.bags,t.pack,t.qty,t.remarks||""]));}download(`gentex_${type}.csv`,rows.map(r=>r.map(csvEscape).join(",")).join("\n"),"text/csv");}
+initLogin();
 </script>
 </body>
 </html>
